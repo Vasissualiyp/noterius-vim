@@ -3,10 +3,21 @@
 # Define the base directory
 base_dir=~/research/notes
 
-# Function to check if the notes.tex file contains only empty lines or comments
+# Function to remove notes-related files except for notes.tex
+cleanup_notes_files() {
+    local dir=$1
+    # Loop over files with the base name 'notes', except notes.tex
+    for file in "$dir"/notes.*; do
+        if [ -f "$file" ] && [ "$file" != "$dir/notes.tex" ]; then
+            #echo "Removing notes-related file: $file"
+            rm "$file"
+        fi
+    done
+}
+
 check_file() {
     local file=$1
-    # Extract content between \begin{document} and \end{document}, excluding the lines containing \begin{document}, \end{document}, and \maketitle
+    # Extract content between \begin{document} and \end{document}, excluding specific lines
     content=$(sed -n '/\\begin{document}/, /\\end{document}/{
         /\\begin{document}/d
         /\\end{document}/d
@@ -15,12 +26,13 @@ check_file() {
         /\\maketitle/d
         p
     }' "$file")
-		#echo "Contents of $file:"
-		#echo "$content"
-    if echo "$content" | grep -qE '^[^%].+$'; then
-        return 1 # Content found, don't delete
+    #echo "Contents of $file:"
+    #echo "$content"
+    # Check if content contains non-comment, non-empty lines
+		if echo "$content" | grep -qE '^[^%].+$'; then
+        return 0 # Content found, don't delete
     else
-        return 0 # Only comments or empty lines, delete
+        return 1 # Only comments or empty lines, delete
     fi
 }
 
@@ -28,12 +40,17 @@ check_file() {
 process_day_dir() {
     local day_dir=$1
     local notes_file="$day_dir/notes.tex"
-    
+
     # Check if notes file exists
     if [ -f "$notes_file" ]; then
-        # Call check_file, if it returns 0, the file should be deleted
+        # Call check_file
         if check_file "$notes_file"; then
-            echo "Removing notes file with only comments or empty lines: $notes_file"
+            # Cleanup notes-related files
+            cleanup_notes_files "$day_dir"
+            echo "Cleaning up the build files: $day_dir"
+        else
+            # Remove the entire directory
+            echo "Removing notes directory with only comments or empty lines: $day_dir"
             rm -r "$day_dir"
         fi
     fi
