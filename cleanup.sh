@@ -69,17 +69,20 @@ process_month_dir() {
     done
 }
 
+process_year_dir() {
+	for month in $(seq -w 1 12); do
+      month_dir="$year_dir/$month"
+      
+      if [ -d "$month_dir" ]; then
+          process_month_dir "$month_dir"
+      fi
+  done
+}
+
 # Main loop to iterate over years and months
 for year in $(seq 2023 $(date +%Y)); do
     year_dir="$base_dir/$year"
-    
     if [ -d "$year_dir" ]; then
-        for month in $(seq -w 1 12); do
-            month_dir="$year_dir/$month"
-            
-            if [ -d "$month_dir" ]; then
-                process_month_dir "$month_dir"
-            fi
-        done
+				process_year_dir "$year_dir"
     fi
 done
