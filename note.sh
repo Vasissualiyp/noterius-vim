@@ -113,4 +113,5 @@ echo "$current_date" > ~/research/notes/.last_note_date
 # Open the file in vim and place the cursor on line n
 #vim -c "1,/begin{document}/-1 fold" + "$file_path"
 cd "$dir_path"
-vim "$file_path"
+nvim -c "set foldmethod=marker" "$file_path"
+#vim -c "set foldmethod=marker" "$file_path"
