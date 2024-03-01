@@ -1,6 +1,6 @@
 # Noterius - Vim/Neovim Note-taking Utility
 
-Noterius is a streamlined note-taking utility designed for Vim/Neovim users who manage their notes in LaTeX format. It integrates seamlessly with your development environment, offering tools for note management, version control, and workspace cleanup. With Noterius, you can efficiently create, organize, and maintain your notes, all from within Vim/Neovim.
+Noterius is a streamlined scientific cli-based note-taking utility designed for Vim/Neovim users who manage their notes in LaTeX format. It integrates seamlessly with your development environment, offering tools for note management, version control, and workspace cleanup. With Noterius, you can efficiently create, organize, and maintain your notes, all from within Vim/Neovim.
 
 ## Features
 
