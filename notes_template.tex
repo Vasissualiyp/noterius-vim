@@ -1,0 +1,113 @@
+%{{{
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Listings for code output display {{{
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  mathescape=false,  
+  literate={\\}{{\textbackslash}}1
+           {\{}{{\textbraceleft}}1
+           {\}}{{\textbraceright}}1
+           {\^}{{\textasciicircum}}1
+           {\$}{{\textdollar}}1
+           {\&}{{\textampersand}}1
+           {\%}{{\textpercent}}1
+           {\#}{{\textasciitilde}}1
+           {_}{{\_}}1,  
+}
+%}}}
+
+
+\usepackage{blindtext}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{url}
+
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{float}
+\usepackage{hyperref}
+
+\usepackage{calc}
+\usepackage{tcolorbox}
+\usepackage{mwe}% combination of lipsum and blindtext and additions
+\usepackage{xpatch}
+\usepackage{framed}
+\usepackage{lipsum}
+
+%Note environment setup
+%{{{
+\newcommand*{\note}[3]{%
+	\begin{tcolorbox}
+	        [
+	         colback=white!100,% background
+	         colframe=#1,% frame colour
+	         coltext=#1, % text color
+		 width=\linewidth, %
+	         height=0.7cm,
+	         halign=left,
+	         valign=center,
+	         fontupper=\large\bfseries,
+	         arc=0mm, auto outer arc,
+	         ]
+	    \MakeUppercase{#2}
+	\end{tcolorbox}
+	\colorlet{leftbarcolor}{#1}
+
+} %}}}
+
+% Gilles Castel's inkscpace figure drawing
+%{{{
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+
+\newcommand{\incfig}[2][1]{%
+    \def\svgwidth{#1\columnwidth}
+    \import{./figures/}{#2.pdf_tex}
+}
+\newcommand{\incfigxopp}[1]{%
+    \includepdf{./figures/#1.pdf}
+}
+
+\pdfsuppresswarningpagegroup=1
+%}}}
+
+\author{Vasilii Pustovoit}
+\title{<today> Research Notes}
+\begin{document}
+\maketitle
+%}}}
+%Color coding:
+%green - supercomputer (Niagara) jobs
+%blue - python code (research-related)
+%red - research
+%black - ...
+%Other:
+%BBsem - Blackboard seminar
+%sem - seminar
+%idea - idea
+
+
+
+
+
+
+
+
+%{{{
+\newpage
+\section{Footnote}
+
+\end{document}
+%}}}

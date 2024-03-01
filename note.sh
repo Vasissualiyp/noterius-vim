@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Get the directory where the script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+notes_main_dir="$HOME/research/notes"
+template_path="${SCRIPT_DIR}/notes_template.tex"
+
 # Get the current time in hours and minutes
 current_time=$(date +%H:%M)
 
@@ -51,11 +57,10 @@ fi
 year=$(echo $current_date | cut -d '-' -f1)
 month=$(echo $current_date | cut -d '-' -f2)
 day=$(echo $current_date | cut -d '-' -f3)
-dir_path=~/research/notes/$year/$month/$day
-file_path=$dir_path/notes.tex
-template_path=~/research/notes/notes_template.tex
-tempfile_path1=$dir_path/.notes.tex.swp
-tempfile_path2=$dir_path/.notes.tex.swo
+dir_path="$notes_main_dir/$year/$month/$day"
+file_path="$dir_path/notes.tex"
+tempfile_path1="$dir_path/.notes.tex.swp"
+tempfile_path2="$dir_path/.notes.tex.swo"
 #}}}
 
 #Check existence of file and directory {{{
