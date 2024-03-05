@@ -6,10 +6,12 @@ base_dir=~/research/notes
 # Function to remove notes-related files except for notes.tex
 cleanup_notes_files() {
     local dir=$1
+	files_removed=false
     # Loop over files with the base name 'notes', except notes.tex
     for file in "$dir"/notes.*; do
         if [ -f "$file" ] && [ "$file" != "$dir/notes.tex" ]; then
             #echo "Removing notes-related file: $file"
+			files_removed=true
             rm "$file"
         fi
     done
@@ -47,7 +49,9 @@ process_day_dir() {
         if check_file "$notes_file"; then
             # Cleanup notes-related files
             cleanup_notes_files "$day_dir"
-            echo "Cleaning up the build files: $day_dir"
+			if "$files_removed"; then
+              echo "Cleaning up the build files: $day_dir"
+		    fi
         else
             # Remove the entire directory
             echo "Removing notes directory with only comments or empty lines: $day_dir"
