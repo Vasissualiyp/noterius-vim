@@ -79,7 +79,7 @@ if [ ! -f "$file_path" ]; then
 
   # Replace <today> with the current date in the file
   sed -i "s/<today>/$current_date/g" "$file_path"
-  sed -i "s/<noterius_src>/$SCRIPT_DIR/g" "$file_path"
+  sed -i "s|<noterius_src>|${SCRIPT_DIR}|g" "$file_path"
   sed -i "s/<author>/$author/g" "$file_path"
 fi
 #}}}
