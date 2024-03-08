@@ -5,9 +5,10 @@ author="Vasilii Pustovoit"
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 NOTERIUS_SRC_DIR="$SCRIPT_DIR/.."
+TEMPLATES_SRC_DIR="$NOTERIUS_SRC_DIR"
 
 notes_main_dir="$HOME/research/notes"
-template_path="${NOTERIUS_SRC_DIR}/notes_template.tex"
+template_path="${TEMPLATES_SRC_DIR}/notes_template.tex"
 
 # Get the current time in hours and minutes
 current_time=$(date +%H:%M)
@@ -80,7 +81,7 @@ if [ ! -f "$file_path" ]; then
 
   # Replace <today> with the current date in the file
   sed -i "s/<today>/$current_date/g" "$file_path"
-  sed -i "s|<noterius_src>|${SCRIPT_DIR}|g" "$file_path"
+  sed -i "s|<noterius_src>|${NOTERIUS_SRC_DIR}|g" "$file_path"
   sed -i "s/<author>/$author/g" "$file_path"
 fi
 #}}}
