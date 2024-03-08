@@ -4,9 +4,10 @@ author="Vasilii Pustovoit"
 
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+NOTERIUS_SRC_DIR="$SCRIPT_DIR/.."
 
 notes_main_dir="$HOME/research/notes"
-template_path="${SCRIPT_DIR}/notes_template.tex"
+template_path="${NOTERIUS_SRC_DIR}/notes_template.tex"
 
 # Get the current time in hours and minutes
 current_time=$(date +%H:%M)
