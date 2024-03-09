@@ -99,4 +99,4 @@ for year in $(seq 2023 $(date +%Y)); do
     fi
 done
 
-move_snips_from_vim_to_nvim_dir
+#move_snips_from_vim_to_nvim_dir
