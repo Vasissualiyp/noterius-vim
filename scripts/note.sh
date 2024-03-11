@@ -5,7 +5,7 @@ author="Vasilii Pustovoit"
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 NOTERIUS_SRC_DIR="$SCRIPT_DIR/.."
-TEMPLATES_SRC_DIR="$NOTERIUS_SRC_DIR"
+TEMPLATES_SRC_DIR="$NOTERIUS_SRC_DIR/templates"
 
 notes_main_dir="$HOME/research/notes"
 template_path="${TEMPLATES_SRC_DIR}/notes_template.tex"
