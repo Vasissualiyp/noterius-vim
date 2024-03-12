@@ -1,10 +1,12 @@
 #!/bin/bash
 
 author="Vasilii Pustovoit"
+citerius_integration=1 # 1 to enable citerius integration
 
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 NOTERIUS_SRC_DIR="$SCRIPT_DIR/.."
+CITERIUS_SRC_DIR="$HOME/research/references"
 TEMPLATES_SRC_DIR="$NOTERIUS_SRC_DIR/templates"
 
 notes_main_dir="$HOME/research/notes"
@@ -83,6 +85,13 @@ if [ ! -f "$file_path" ]; then
   sed -i "s/<today>/$current_date/g" "$file_path"
   sed -i "s|<noterius_src>|${NOTERIUS_SRC_DIR}|g" "$file_path"
   sed -i "s/<author>/$author/g" "$file_path"
+  if [ "$citerius_integration" -eq 1 ]; then
+      sed -i "s|<citations_src>|${CITERIUS_SRC_DIR}|g" "$file_path"
+  else
+      # Remove the whole line that contains anything bibliography-related
+      sed -i '/citations_src/d' "$file_path"
+      sed -i '/printbibliography/d' "$file_path"
+  fi
 fi
 #}}}
 
