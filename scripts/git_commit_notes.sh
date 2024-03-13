@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Location of the notes
 notes_main_dir="$HOME/research/notes"

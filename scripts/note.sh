@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 author="Vasilii Pustovoit"
 citerius_integration=1 # 1 to enable citerius integration
