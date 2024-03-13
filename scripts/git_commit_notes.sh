@@ -3,6 +3,8 @@
 # Location of the notes
 notes_main_dir="$HOME/research/notes"
 
+github_integration=1 #1 for true
+
 # Define the minimum acceptable year (first note)
 min_year=2023
 
@@ -34,4 +36,6 @@ done
 commit_message="notes update from $(date)"
 git commit -m "$commit_message"
 echo "Committed with message: '$commit_message'"
-git push
+if [[ $github_integration -eq 1 ]]; then
+    git push origin main
+fi
