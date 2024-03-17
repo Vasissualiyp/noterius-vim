@@ -49,6 +49,7 @@ function! FindNextNote()
         echom "No notes found for the next 365 days"
     endif
 endfunction
+command! FindPreviousNote call s:FindPreviousNote()
 
 function! FindPreviousNote()
     let l:filepath = expand("%:p")
@@ -175,7 +176,7 @@ function! DisplayNoteriusQuickhelp()
     setlocal nomodifiable
 endfunction
 
-command! FindPreviousNote call s:FindPreviousNote()
-command! FindNextNote call s:FindNextNote()
-command! OpenNoteByDate call s:OpenNoteByDate()
+command! FindPreviousNote call FindPreviousNote()
+command! FindNextNote call FindNextNote()
+command! OpenNoteByDate call OpenNoteByDate()
 command! DisplayNoteriusQuickhelp call DisplayNoteriusQuickhelp()
