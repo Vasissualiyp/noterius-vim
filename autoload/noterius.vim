@@ -1,4 +1,4 @@
-function! FindNextNote()
+function! noterius#FindNextNote()
     let l:filepath = expand("%:p")
     let l:dirs = split(l:filepath, "/")
 
@@ -43,9 +43,8 @@ function! FindNextNote()
         echom "No notes found for the next 365 days"
     endif
 endfunction
-command! FindPreviousNote call s:FindPreviousNote()
 
-function! FindPreviousNote()
+function! noterius#FindPreviousNote()
     let l:filepath = expand("%:p")
     let l:dirs = split(l:filepath, "/")
 
@@ -93,7 +92,7 @@ function! FindPreviousNote()
     endwhile
 endfunction
 
-function! OpenNoteByDate()
+function! noterius#OpenNoteByDate()
     " Prompt the user for input
     let l:input = input('Enter date (YYYY-MM-DD) or day of the week (e.g., Mon, Tue, etc.), or press Enter for today: ')
 
@@ -149,7 +148,7 @@ function! OpenNoteByDate()
     endif
 endfunction
 
-function! DisplayNoteriusQuickhelp()
+function! noterius#DisplayNoteriusQuickhelp()
     let l:quickhelp_path = get(g:, 'noterius_quickhelp_path', '')
     if l:quickhelp_path == ''
         echo "No path set for Noterius Quickhelp"
@@ -170,7 +169,7 @@ function! DisplayNoteriusQuickhelp()
     setlocal nomodifiable
 endfunction
 
-command! FindPreviousNote call FindPreviousNote()
-command! FindNextNote call FindNextNote()
-command! OpenNoteByDate call OpenNoteByDate()
-command! DisplayNoteriusQuickhelp call DisplayNoteriusQuickhelp()
+command! FindPreviousNote call noterius#FindPreviousNote()
+command! FindNextNote call noterius#FindNextNote()
+command! OpenNoteByDate call noterius#OpenNoteByDate()
+command! DisplayNoteriusQuickhelp call noterius#DisplayNoteriusQuickhelp()
