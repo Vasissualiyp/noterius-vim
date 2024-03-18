@@ -1,21 +1,19 @@
 local M = {}
 
-M.notes_dir = vim.fn.stdpath('data') .. '/noterius/notes' -- Default path, can be customized
+M.notes_dir = vim.fn.stdpath('data') .. '/noterius_vim/notes' -- Default path
 
 function M.setup(opts)
+  opts = opts or {}
   M.notes_dir = opts.notes_dir or M.notes_dir
 
-  local set_keymap = vim.api.nvim_set_keymap
-  local opts = {noremap = true, silent = true}
+  local keymaps = opts.keymaps or {
+    ["<leader>nf"] = "search_notes",
+    ["<leader>ng"] = "grep_notes",
+  }
 
-  if opts.keymaps then
-    for key, func in pairs(opts.keymaps) do
-      if func == "search_notes" then
-        set_keymap("n", key, ":lua require('noterius.telescope_integration').search_notes()<CR>", opts)
-      elseif func == "grep_notes" then
-        set_keymap("n", key, ":lua require('noterius.telescope_integration').grep_notes()<CR>", opts)
-      end
-    end
+  for k, v in pairs(keymaps) do
+    local cmd = string.format(":lua require('noterius_vim.noterius_telescope').%s()<CR>", v)
+    vim.api.nvim_set_keymap('n', k, cmd, {noremap = true, silent = true})
   end
 end
 
