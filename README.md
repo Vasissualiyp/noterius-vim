@@ -1,85 +1,70 @@
-# Noterius - Scientific Vim/Neovim Note-taking Utility
+# Noterius-Vim - Enhanced Scientific Note-taking for Vim/Neovim
 
-Noterius is a streamlined scientific cli-based note-taking utility designed for Vim/Neovim users who manage their notes in LaTeX format. It integrates seamlessly with your development environment, offering tools for note management, version control, and workspace cleanup. With Noterius, you can efficiently create, organize, and maintain your notes, all from within Vim/Neovim.
+Noterius-Vim is an enhanced scientific note-taking utility tailored for Vim and Neovim users, especially those who manage their notes in LaTeX. Building upon the foundation of the original Noterius utility, Noterius-Vim introduces seamless integration with Neovim's Lua capabilities and optional Telescope support for advanced note searching and management. It aims to provide a comprehensive environment for creating, organizing, and maintaining scientific notes with ease.
 
 ## Features
 
-- **LaTeX Note Management**: Create and manage daily notes with a LaTeX template.
-- **Version Control Integration**: Automatically commit and push your notes to a Git repository.
-- **Workspace Cleanup**: Clean up your notes directory by removing unnecessary files and directories.
+- **LaTeX Note Management**: Effortlessly create and manage your daily notes using a customizable LaTeX template.
+- **Version Control Integration**: Automatically track changes to your notes with integrated Git support, ensuring your work is always saved and synchronized.
+- **Workspace Cleanup**: Maintain a tidy workspace by removing unnecessary files and directories, keeping only what's essential.
+- **Telescope Integration** (Neovim only): Utilize the power of Telescope for searching and managing notes with features like live grep and file finding, enhancing your note-taking workflow.
 
 ## Installation
 
-1. Clone the Noterius repository to your local machine.
-2. Navigate to the Noterius directory and make the scripts executable:
-   ```
-   chmod +x *.sh
-   ```
-3. Integrate Noterius into your Vim/Neovim workflow by adding custom commands or keybindings to call the scripts directly from your editor.
+### Prerequisites
 
-## Scripts Overview
+- Vim or Neovim installed on your machine.
+- For Neovim users wanting to use Telescope features, [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) must be installed along with [Ripgrep](https://github.com/BurntSushi/ripgrep) for file searching capabilities.
 
-### 1. `cleanup.sh`
+### Steps
 
-Cleans up the notes directory by removing unnecessary files while preserving the primary `notes.tex` files.
+1. Use your preferred Vim/Neovim package manager to install `noterius-vim`. For example, with [vim-plug](https://github.com/junegunn/vim-plug):
 
-#### Features:
-- Removes all `notes.*` files except for `notes.tex`.
-- Deletes directories containing `notes.tex` files with only comments or empty lines.
-
-#### Usage:
-```
-./cleanup.sh
+```vim
+Plug 'username/noterius-vim'
 ```
 
-### 2. `git_commit_notes.sh`
+2. For Neovim users, ensure your `init.lua` or equivalent configuration file is set up to utilize Noterius-Vim's Lua-based features and Telescope integration as shown in the Keymaps section below.
 
-Automates the process of committing your notes to a Git repository.
+## Keymaps
 
-#### Features:
-- Adds new or modified note files to the staging area.
-- Commits the changes with a predefined message containing the commit date.
-- Pushes the commit to the remote repository.
+Configure keymaps for note management and optional Telescope integration in your `init.lua`:
 
-#### Usage:
-```
-./git_commit_notes.sh
+```lua
+local notes_dir = vim.fn.expand('~/research/notes')
+
+require('noterius-vim.noterius_telescope').setup({
+  notes_dir = notes_dir,
+})
+
+-- Folding keymaps
+vim.keymap.set('n', '<leader>zo', 'ggjVGkkzo<Esc><Esc>gg', { silent = true })
+vim.keymap.set('n', '<leader>zm', 'ggjVGkkzm<Esc><Esc>gg', { silent = true })
+
+-- Note management keymaps
+vim.keymap.set('n', '<leader>nn', ':FindNextNote<CR>', { silent = true })
+vim.keymap.set('n', '<leader>np', ':FindPreviousNote<CR>', { silent = true })
+vim.keymap.set('n', '<leader>no', ':OpenNoteByDate<CR>', { silent = true })
+vim.keymap.set('n', '<leader>n?', ':DisplayNoteriusQuickhelp<CR>', { silent = true })
+
+-- Optional Telescope integration for Neovim
+local noterius_telescope = require('noterius-vim.noterius_telescope')
+vim.keymap.set('n', '<leader>ng', noterius_telescope.grep_notes, { silent = true })
+vim.keymap.set('n', '<leader>nf', noterius_telescope.find_notes, { silent = true })
 ```
 
-### 3. `note.sh`
+## Upcoming Features and Integration
 
-Manages LaTeX-based notes, supporting creation, deletion, and temporary file management.
-
-#### Features:
-- Creates a new note for the current day using a LaTeX template, filling in the current date.
-- Allows for the removal of specific day's notes and temporary Vim/Neovim swap files.
-
-#### Flags:
-- `-r [date]`: Remove the note and its directory for the specified date.
-- `-tempr [date]`: Remove temporary files for the specified date.
-
-#### Usage:
-Create/edit today's note:
-```
-./note.sh
-```
-Remove a specific day's note:
-```
-./note.sh -r YYYY-MM-DD
-```
-Remove temporary files for a specific day:
-```
-./note.sh -tempr YYYY-MM-DD
-```
+Future releases aim to fully integrate the original Noterius's bash script functionalities directly into Vimscript and Lua, offering a unified and streamlined experience across both Vim and Neovim. These will include enhanced version control automation, sophisticated workspace cleanup, and dynamic LaTeX note generation and management.
 
 ## Customization
 
-Noterius is designed for flexibility. You can customize the LaTeX template (`notes_template.tex`) to suit your note-taking style. Furthermore, the scripts can be adjusted to fit your specific workflow or directory structure.
+Customize your LaTeX template (`notes_template.tex`) to match your note-taking preferences. Further customization options and additional functionalities will be progressively documented and made available, ensuring Noterius-Vim adapts to your workflow.
 
 ## Contribution
 
-Contributions are welcome! Whether you're improving scripts, adding new features, or enhancing the LaTeX template, feel free to fork the project and submit a pull request.
+Contributions to Noterius-Vim are highly encouraged. Whether it's by refining the code, adding new features, or improving documentation, your input is welcome. Please fork the repository and submit a pull request with your changes.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Noterius-Vim is open-sourced under the MIT License. For more details, see the LICENSE file in the project repository.
