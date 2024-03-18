@@ -1,6 +1,6 @@
 local M = {}
 
-M.notes_dir = vim.fn.stdpath('data') .. '/noterius_vim/notes' -- Default path
+M.notes_dir = vim.fn.stdpath('data') .. '/home/vasilii/research/notes' -- Default path
 
 function M.setup(opts)
   opts = opts or {}
