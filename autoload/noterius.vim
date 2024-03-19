@@ -1,4 +1,4 @@
-function! SetupNoteriusNotes()
+function! noterius#SetupNoteriusNotes()
     " Ensure the global variable for notes directory is defined
     if !exists('g:noterius_notes_dir')
         echo "Noterius notes directory is not set. Please define g:noterius_notes_dir."
@@ -41,7 +41,7 @@ function! SetupNoteriusNotes()
     echo "Noterius notes setup completed."
 endfunction
 
-function! NoteriusSyncWithRemoteRepo(gitDir)
+function! noterius#NoteriusSyncWithRemoteRepo(gitDir)
     " Save the current working directory
     let l:originalDir = getcwd()
 
