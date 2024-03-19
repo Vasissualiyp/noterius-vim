@@ -10,11 +10,11 @@ cleanup_notes_files() {
     # Loop over files with the base name 'notes', except notes.tex
     for file in "$dir"/notes.*; do
         if [ -f "$file" ] && [ "$file" != "$dir/notes.tex" ]; then
-            #echo "Removing notes-related file: $file"
-			files_removed=true
             rm "$file"
+            files_removed=true
         fi
     done
+    echo "$files_removed"
 }
 
 check_file() {
@@ -24,6 +24,7 @@ check_file() {
         /\\begin{document}/d
         /\\end{document}/d
         /\\newpage/d
+        /\\printbibliography/d
         /\\section{Footnote}/d
         /\\maketitle/d
         p
@@ -48,7 +49,7 @@ process_day_dir() {
         # Call check_file
         if check_file "$notes_file"; then
             # Cleanup notes-related files
-            cleanup_notes_files "$day_dir"
+			files_removed = $(cleanup_notes_files "$day_dir")
 			if "$files_removed"; then
               echo "Cleaning up the build files: $day_dir"
 		    fi

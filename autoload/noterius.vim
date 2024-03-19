@@ -77,6 +77,10 @@ endfunction
 function! noterius#NoteriusCleanup()
     execute '! ' . shellescape(g:noterius_source_dir) . '/bin/cleanup.sh ' . shellescape(expand(g:noterius_notes_dir))
 endfunction
+" -------------------------- GIT PUSH ---------------------------------
+function! noterius#NoteriusGitPush()
+    execute '! ' . shellescape(g:noterius_source_dir) . '/bin/git_commit_notes.sh ' . shellescape(expand(g:noterius_notes_dir))
+endfunction
 " -------------------------- SETUP NOTERIUS ---------------------------------
 
 function! noterius#SetupNoteriusNotes()
