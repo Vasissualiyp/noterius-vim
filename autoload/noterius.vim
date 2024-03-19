@@ -6,7 +6,7 @@ function! noterius#ReplacePlaceholders()
 
     " Your search and replace operations
     %s/<today>/\=g:current_date/g
-    %s/<noterius_src>/\=g:notes_main_dir/g
+    %s/<noterius_src>/\=g:noterius_notes_dir/g
     %s/<author>/\=g:author/g
     if g:citerius_integration == 1
         %s/<citations_src>/\=g:citerius_src_dir/g
@@ -45,19 +45,31 @@ endfunction
 
 
 function! noterius#NoteriusToday()
-    " Check if the directory exists and create it if not
-    if !isdirectory(g:noterius_todays_dir)
-        call mkdir(g:noterius_todays_dir, "p")
+		
+    let l:first_time_flag = 0
+
+    " Copy the file from the template if it doesn't exist
+    if !filereadable(expand(g:noterius_todays_file))
+		let l:first_time_flag = 1
+        " Check if the directory exists and create it if not
+        if !isdirectory(g:noterius_todays_dir)
+            call mkdir(g:noterius_todays_dir, "p")
+        endif
+        
+	    call noterius#CopyFile(expand(g:noterius_notes_template_path), expand(g:noterius_todays_file))
     endif
-    
-	call noterius#CopyFile(expand(g:noterius_notes_template_path), expand(g:noterius_todays_file))
-    
+
     execute 'edit ' . g:noterius_todays_file
-    
-    " Call the function to perform replacements
-    call noterius#ReplacePlaceholders()
-    
-    write
+
+	" Perform necessary replacements if the file doesn't exist
+    if l:first_time_flag == 1
+        " Call the function to perform replacements
+        call noterius#ReplacePlaceholders()
+        write
+    endif
+
+	" This is needed to allow the compilation of the document
+	execute 'VimtexReloadState' 
 endfunction
 
 function! noterius#SetupNoteriusNotes()
@@ -307,11 +319,3 @@ function! noterius#DisplayNoteriusQuickhelp()
     call append(0, l:lines)
     setlocal nomodifiable
 endfunction
-
-"command! NoteriusToday call noterius#NoteriusToday()
-"command! SetupNoteriusNotes call noterius#SetupNoteriusNotes()
-"command! FindPreviousNote call noterius#FindPreviousNote()
-"command! FindNextNote call noterius#FindNextNote()
-"command! OpenNoteByDate call noterius#OpenNoteByDate()
-"command! DisplayNoteriusQuickhelp call noterius#DisplayNoteriusQuickhelp()
-"command! NoteriusGitPull call noterius#NoteriusSyncWithRemoteRepo(expand(g:noterius_notes_dir))

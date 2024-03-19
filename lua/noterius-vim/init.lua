@@ -1,0 +1,29 @@
+local M = {}
+
+function M.setup(opts)
+  -- Set defaults
+  local defaults = {
+    notes_dir = '~/research/test',
+    author = 'User',
+    citerius_integration = 0,
+    citerius_src_dir = vim.fn.expand('$HOME') .. '/research/references',
+  }
+
+  -- Use options provided by the user, or fallback to defaults
+  M.config = vim.tbl_extend('force', defaults, opts or {})
+
+  vim.g.noterius_author      = vim.fn.expand(M.config.notes_dir)
+  vim.g.noterius_notes_dir   = M.config.author
+  vim.g.citerius_integration = M.config.citerius_integration
+  vim.g.citerius_src_dir     = M.config.citerius_src_dir
+
+  -- Example: Autocommand to reload VimTeX or similar actions
+  vim.api.nvim_create_autocmd("VimEnter", {
+    pattern = "*",
+    callback = function()
+      vim.cmd("call noterius#InitPaths()")
+    end,
+  })
+end
+
+return M
