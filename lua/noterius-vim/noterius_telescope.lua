@@ -1,5 +1,5 @@
 local M = {}
-local default_notes_path = '~/research/notes'
+local default_notes_path = '~/research/test'
 
 -- Initialize notes_dir with a default path
 M.notes_dir = vim.g.noterius_notes_dir or default_notes_path
