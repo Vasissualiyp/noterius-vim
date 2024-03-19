@@ -26,6 +26,8 @@ function! noterius#NoteriusToday()
     if !filereadable(g:file_path)
 		call system('cp ' . shellescape(g:template_path) . ' ' . shellescape(g:file_path))
     endif
+	echo g:file_path
+	echo g:template_path
     
     execute 'edit ' . g:file_path
     

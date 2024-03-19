@@ -2,7 +2,7 @@
 " Maintainer: Vasissualiyp
 " Version: 0.1
 
-let default_notes_path = '~/research/notes'
+let default_notes_path = '~/research/test'
 if exists('g:noterius_notes_dir')
     let notes_dir = g:noterius_notes_dir
 else
