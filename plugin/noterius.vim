@@ -24,11 +24,11 @@ function! noterius#InitPaths()
     let g:noterius_todays_dir = g:noterius_notes_dir . '/' . g:current_date_dirfmt
     let g:noterius_todays_file = g:noterius_todays_dir . '/notes.tex'
 	
-	" These variables are only relevant for first-time noterius setup
-    let g:noterius_source_dir = expand('<sfile>:p:h') . '/..'
-    let g:noterius_templates_dir = expand('<sfile>:p:h') . '/../templates'
-
 endfunction
+
+" These variables are only relevant for first-time noterius setup
+let g:noterius_source_dir = expand('<sfile>:p:h') . '/..'
+let g:noterius_templates_dir = expand('<sfile>:p:h') . '/../templates'
 
 command! NoteriusToday call noterius#NoteriusToday()
 command! NoteriusCleanup call noterius#NoteriusCleanup()
