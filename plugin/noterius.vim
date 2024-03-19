@@ -27,7 +27,7 @@ let g:citerius_src_dir = $HOME . '/research/references'
 let g:current_time = strftime('%H:%M')
 let g:current_date = strftime('%Y-%m-%d')
 let g:current_date_dirfmt = strftime('%Y/%m/%d')
-let g:noterius_todays_dir = g:noterius_notes_dir . '/' . g:current_date_dirfmt
+let g:noterius_todays_dir = g:notes_main_dir . '/' . g:current_date_dirfmt
 let g:noterius_todays_file = g:noterius_todays_dir . '/notes.tex'
 
 command! NoteriusToday call noterius#NoteriusToday()
@@ -36,4 +36,4 @@ command! FindPreviousNote call noterius#FindPreviousNote()
 command! FindNextNote call noterius#FindNextNote()
 command! OpenNoteByDate call noterius#OpenNoteByDate()
 command! DisplayNoteriusQuickhelp call noterius#DisplayNoteriusQuickhelp()
-command! NoteriusGitPull call noterius#NoteriusSyncWithRemoteRepo(expand(g:noterius_notes_dir))
+command! NoteriusGitPull call noterius#NoteriusSyncWithRemoteRepo(expand(g:notes_main_dir))
