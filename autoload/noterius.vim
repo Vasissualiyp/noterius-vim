@@ -105,8 +105,8 @@ endfunction
 function! ProcessDayDir(day_dir)
     let notes_file = a:day_dir . '/notes.tex'
     if filereadable(notes_file)
-        if Call('CheckFile', notes_file)
-            let files_removed = Call('CleanupNotesFiles', a:day_dir)
+        if CheckFile(notes_file) " Fixed function call
+            let files_removed = CleanupNotesFiles(a:day_dir) " Fixed function call
             if files_removed
                 echom "Cleaning up the build files: " . a:day_dir
             endif
@@ -138,9 +138,6 @@ function! CleanupNotes()
         endif
     endfor
 endfunction
-
-" Command to trigger the cleanup
-command! NoteriusCleanup call CleanupNotes()
 
 " -------------------------- SETUP NOTERIUS ---------------------------------
 
