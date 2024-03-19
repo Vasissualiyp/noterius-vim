@@ -1,36 +1,16 @@
-" Define global variables
-let g:author = "Vasilii Pustovoit"
-let g:citerius_integration = 1 " 1 to enable, 0 to disable
-let g:vim_type = "nvim" " or 'vim'
-
-" Directories and paths
-let g:script_dir = fnamemodify(expand('<sfile>:p'), ':h')
-let g:noterius_src_dir = g:script_dir . '/..'
-let g:citerius_src_dir = $HOME . '/research/references'
-let g:notes_main_dir = $HOME . '/research/notes'
-let g:templates_src_dir = g:notes_main_dir . '/templates'
-let g:template_path = g:templates_src_dir . '/notes_template.tex'
-
-" Get the current time and date
-let g:current_time = strftime('%H:%M')
-let g:current_date = strftime('%Y-%m-%d')
-
 " Replace placeholders within the open document
 function! noterius#ReplacePlaceholders()
-    " Replace <today> with the current date
+    " Ensure the buffer is modifiable and writable
+    setlocal modifiable
+    setlocal buftype=
+
+    " Your search and replace operations
     %s/<today>/\=g:current_date/g
-    
-    " Replace <noterius_src> with the Noterius source directory
     %s/<noterius_src>/\=escape(g:noterius_src_dir, '\/')/g
-
-    " Replace <author> with the author name
     %s/<author>/\=g:author/g
-
-    " Conditional replacement for <citations_src> based on Citerius integration
     if g:citerius_integration == 1
         %s/<citations_src>/\=escape(g:citerius_src_dir, '\/')/g
     else
-        " Remove lines containing 'citations_src' or 'printbibliography'
         g/citations_src/d
         g/printbibliography/d
     endif

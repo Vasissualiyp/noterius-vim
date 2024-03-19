@@ -31,6 +31,9 @@ let g:template_path = g:templates_src_dir . '/notes_template.tex'
 " Get the current time and date
 let g:current_time = strftime('%H:%M')
 let g:current_date = strftime('%Y-%m-%d')
+let g:current_date_dirfmt = strftime('%Y/%m/%d')
+let g:dir_path = g:notes_dir . '/' . g:current_date_dirfmt
+let g:file_path = g:dir_path . '/notes.tex'
 
 command! NoteriusToday call noterius#NoteriusToday()
 command! SetupNoteriusNotes call noterius#SetupNoteriusNotes()
