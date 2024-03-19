@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Define the base directory
-base_dir=~/research/notes
+notes_dir="$1"
 
 # Function to remove notes-related files except for notes.tex
 cleanup_notes_files() {
@@ -85,18 +85,8 @@ process_year_dir() {
 
 # Main loop to iterate over years and months
 for year in $(seq 2023 $(date +%Y)); do
-    year_dir="$base_dir/$year"
+    year_dir="$notes_dir/$year"
     if [ -d "$year_dir" ]; then
 				process_year_dir "$year_dir"
     fi
 done
-
-#move_snips_from_vim_to_nvim_dir() {
-#    vim_dir="$HOME/.vim/plugged/vim-snippets/UltiSnips"
-#    neovim_dir="$HOME/.config/nvim/plugged/vim-snippets/UltiSnips"
-#    rm -rf "$neovim_dir"
-#    mv "$vim_dir" "$neovim_dir"
-#	echo "Moved the snippets successfully"
-#}
-
-#move_snips_from_vim_to_nvim_dir

@@ -74,71 +74,9 @@ function! noterius#NoteriusToday()
 endfunction
 
 " -------------------------- CLEANUP ---------------------------------
-
-" Function to remove notes-related files except for notes.tex
-function! CleanupNotesFiles(dir)
-    let files_removed = v:false
-    " List all 'notes.*' files except 'notes.tex'
-    for file in split(glob(a:dir . '/notes.*'), "\n")
-        if filereadable(file) && file !=# a:dir . '/notes.tex'
-            let files_removed = v:true
-            call delete(file)
-        endif
-    endfor
-    return files_removed
+function! NoteriusCleanup()
+    execute '! ' . shellescape(g:noterius_source_dir) . '/bin/cleanup.sh ' . shellescape(expand(g:noterius_notes_dir))
 endfunction
-
-" Function to check the content of notes.tex
-function! CheckFile(file)
-    let content = join(readfile(a:file), "\n")
-    let document_content = matchstr(content, '\\begin{document}\\_.\\{-}\\end{document}')
-    let lines = split(document_content, "\n")
-    for line in lines
-        if line !~ '^\s*%' && line !~ '^\s*$' && line !~ '\\newpage' && line !~ '\\section{Footnote}' && line !~ '\\maketitle'
-            return v:true
-        endif
-    endfor
-    return v:false
-endfunction
-
-" Function to process each day's directory
-function! ProcessDayDir(day_dir)
-    let notes_file = a:day_dir . '/notes.tex'
-    if filereadable(notes_file)
-        if CheckFile(notes_file) " Fixed function call
-            let files_removed = CleanupNotesFiles(a:day_dir) " Fixed function call
-            if files_removed
-                echom "Cleaning up the build files: " . a:day_dir
-            endif
-        else
-            echom "Removing notes directory with only comments or empty lines: " . a:day_dir
-            call delete(a:day_dir, 'rf')
-        endif
-    endif
-endfunction
-
-" Main function to start the cleanup process
-function! CleanupNotes()
-    " Loop over years and months
-    for year in range(2023, strftime('%Y'))
-        let year_dir = g:noterius_notes_dir . '/' . year
-        if isdirectory(year_dir)
-            for month in range(1, 12)
-                let month_dir = year_dir . '/' . printf('%02d', month)
-                if isdirectory(month_dir)
-                    " Process each day in the month
-                    for day in range(1, 31)
-                        let day_dir = month_dir . '/' . printf('%02d', day)
-                        if isdirectory(day_dir)
-                            call ProcessDayDir(day_dir)
-                        endif
-                    endfor
-                endif
-            endfor
-        endif
-    endfor
-endfunction
-
 " -------------------------- SETUP NOTERIUS ---------------------------------
 
 function! noterius#SetupNoteriusNotes()
