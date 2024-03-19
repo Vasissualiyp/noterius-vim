@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 
 # Location of the notes
-notes_main_dir="$HOME/research/notes"
+notes_dir="$1"
 
-github_integration=1 #1 for true
+github_integration="$2" #1 for true
 
 # Define the minimum acceptable year (first note)
 min_year=2023
 
-# Cleanup the notes
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-cd "$SCRIPT_DIR"
-./cleanup.sh
+# Cleanup the notes - FOR NOW THIS IS ASSUMED AS TRUE
+#SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+#cd "$SCRIPT_DIR"
+#./cleanup.sh
 
 # Get the current year
 current_year=$(date +%Y)
 
 # Loop through all directories in the notes directory
-cd "$notes_main_dir" || { echo "Notes directory doesn't exist"; exit; }
+cd "$notes_dir" || { echo "Notes directory doesn't exist"; exit; }
 for dir in */ ; do
     # Remove the trailing slash to just get the directory name
     dir_name=${dir%/}

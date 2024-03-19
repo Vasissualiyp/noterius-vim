@@ -14,7 +14,6 @@ cleanup_notes_files() {
             files_removed=true
         fi
     done
-    echo "$files_removed"
 }
 
 check_file() {
@@ -49,7 +48,7 @@ process_day_dir() {
         # Call check_file
         if check_file "$notes_file"; then
             # Cleanup notes-related files
-			files_removed = $(cleanup_notes_files "$day_dir")
+			cleanup_notes_files "$day_dir"
 			if "$files_removed"; then
               echo "Cleaning up the build files: $day_dir"
 		    fi

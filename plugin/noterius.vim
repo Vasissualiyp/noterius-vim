@@ -6,12 +6,14 @@ function! noterius#InitPaths()
     let default_notes_path = '~/research/test'
 	let default_author = 'User'
 	let default_citerius_integration = 0
+	let default_noterius_github_integration = 0
 	let default_citerius_srs_dir = $HOME . '/research/references'
 
 	" Set default values
 	let g:noterius_author = exists('g:noterius_author') ? g:noterius_author : default_author
 	let g:noterius_notes_dir = exists('g:noterius_notes_dir') ? g:noterius_notes_dir : default_notes_path
 	let g:citerius_integration = exists('g:citerius_integration') ? g:citerius_integration : default_citerius_integration
+	let g:noterius_github_integration = exists('g:noterius_github_integration') ? g:noterius_github_integration : default_noterius_github_integration
 	let g:citerius_src_dir = exists('g:citerius_src_dir') ? g:citerius_src_dir : default_citerius_srs_dir
 
     let g:noterius_quickhelp_path = expand(g:noterius_notes_dir) . '/templates/quickhelp.tex'
@@ -32,6 +34,7 @@ let g:noterius_templates_dir = expand('<sfile>:p:h') . '/../templates'
 
 command! NoteriusToday call noterius#NoteriusToday()
 command! NoteriusCleanup call noterius#NoteriusCleanup()
+command! NoteriusGitPush call noterius#NoteriusGitPush()
 command! SetupNoteriusNotes call noterius#SetupNoteriusNotes()
 command! FindPreviousNote call noterius#FindPreviousNote()
 command! FindNextNote call noterius#FindNextNote()

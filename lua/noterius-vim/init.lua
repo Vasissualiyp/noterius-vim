@@ -6,6 +6,7 @@ function M.setup(opts)
     notes_dir = '~/research/notes',
     author = 'User',
     citerius_integration = 0,
+    noterius_github_integration = 0,
     citerius_src_dir = vim.fn.expand('$HOME') .. '/research/references',
   }
 
@@ -15,6 +16,7 @@ function M.setup(opts)
   vim.g.noterius_notes_dir   = vim.fn.expand(M.config.notes_dir)
   vim.g.noterius_author      = M.config.author
   vim.g.citerius_integration = M.config.citerius_integration
+  vim.g.noterius_github_integration = M.config.noterius_github_integration
   vim.g.citerius_src_dir     = M.config.citerius_src_dir
 
   -- Example: Autocommand to reload VimTeX or similar actions
