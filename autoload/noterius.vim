@@ -6,7 +6,7 @@ function! noterius#ReplacePlaceholders()
 
     " Your search and replace operations
     %s/<today>/\=g:current_date/g
-    %s/<noterius_src>/\=g:noterius_src_dir/g
+    %s/<noterius_src>/\=g:notes_main_dir/g
     %s/<author>/\=g:author/g
     if g:citerius_integration == 1
         %s/<citations_src>/\=g:citerius_src_dir/g
@@ -46,19 +46,13 @@ endfunction
 
 function! noterius#NoteriusToday()
     " Check if the directory exists and create it if not
-    if !isdirectory(g:dir_path)
-        call mkdir(g:dir_path, "p")
+    if !isdirectory(g:noterius_todays_dir)
+        call mkdir(g:noterius_todays_dir, "p")
     endif
     
-    " Check if the note file exists and copy the template if not
-    "if !filereadable(g:file_path)
-	"	call system('cp ' . shellescape(g:template_path) . ' ' . shellescape(g:file_path))
-    "endif
-	call noterius#CopyFile(expand(g:template_path), expand(g:file_path))
-	echo g:file_path
-	echo g:template_path
+	call noterius#CopyFile(expand(g:noterius_notes_template_path), expand(g:noterius_todays_file))
     
-    execute 'edit ' . g:file_path
+    execute 'edit ' . g:noterius_todays_file
     
     " Call the function to perform replacements
     call noterius#ReplacePlaceholders()
