@@ -75,7 +75,6 @@ function! NoteriusSyncWithRemoteRepo(gitDir)
 endfunction
 
 " Expose the function as a command
-command! SetupNoteriusNotes call SetupNoteriusNotes()
 function! noterius#FindNextNote()
     let l:filepath = expand("%:p")
     let l:dirs = split(l:filepath, "/")
@@ -253,4 +252,3 @@ command! FindNextNote call noterius#FindNextNote()
 command! OpenNoteByDate call noterius#OpenNoteByDate()
 command! DisplayNoteriusQuickhelp call noterius#DisplayNoteriusQuickhelp()
 command! NoteriusGitPull call noterius#NoteriusSyncWithRemoteRepo(expand(g:noterius_notes_dir))
-
