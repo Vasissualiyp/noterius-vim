@@ -4,13 +4,14 @@ function! noterius#ReplacePlaceholders()
     setlocal modifiable
     setlocal buftype=
 
-    " Your search and replace operations
-    %s/<today>/\=g:current_date/g
-    %s/<noterius_src>/\=escape(g:noterius_src_dir, '\/')/g
-    %s/<author>/\=g:author/g
+    " Perform search and replace operations using | as the separator
+    %s|<today>|\=g:current_date|g
+    %s|<noterius_src>|\=g:noterius_src_dir|g
+    %s|<author>|\=g:author|g
     if g:citerius_integration == 1
-        %s/<citations_src>/\=escape(g:citerius_src_dir, '\/')/g
+        %s|<citations_src>|\=g:citerius_src_dir|g
     else
+        " Delete lines containing specific placeholders
         g/citations_src/d
         g/printbibliography/d
     endif
