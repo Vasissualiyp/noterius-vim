@@ -12,8 +12,8 @@ function M.setup(opts)
   -- Use options provided by the user, or fallback to defaults
   M.config = vim.tbl_extend('force', defaults, opts or {})
 
-  vim.g.noterius_author      = vim.fn.expand(M.config.notes_dir)
-  vim.g.noterius_notes_dir   = M.config.author
+  vim.g.noterius_notes_dir   = vim.fn.expand(M.config.notes_dir)
+  vim.g.noterius_author      = M.config.author
   vim.g.citerius_integration = M.config.citerius_integration
   vim.g.citerius_src_dir     = M.config.citerius_src_dir
 
