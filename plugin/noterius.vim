@@ -3,7 +3,7 @@
 " Version: 0.1
 
 let g:noterius_quickhelp_path = '/home/vasilii/Software/Noterius/templates/quickhelp.tex'
-local default_notes_path = '~/research/notes'
+let default_notes_path = '~/research/notes'
 
 if exists('g:noterius_notes_dir')
     let notes_dir = g:noterius_notes_dir
