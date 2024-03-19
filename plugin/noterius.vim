@@ -24,7 +24,7 @@ let g:vim_type = "nvim" " or 'vim'
 let g:script_dir = fnamemodify(expand('<sfile>:p'), ':h')
 let g:noterius_src_dir = g:script_dir . '/..'
 let g:citerius_src_dir = $HOME . '/research/references'
-let g:notes_main_dir = $HOME . '/research/notes'
+let g:notes_main_dir = expand(notes_dir)
 let g:templates_src_dir = g:notes_main_dir . '/templates'
 let g:template_path = g:templates_src_dir . '/notes_template.tex'
 

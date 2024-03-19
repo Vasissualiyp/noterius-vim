@@ -24,7 +24,7 @@ function! noterius#NoteriusToday()
     
     " Check if the note file exists and copy the template if not
     if !filereadable(g:file_path)
-        call copy(g:template_path, g:file_path)
+		call system('cp ' . shellescape(g:template_path) . ' ' . shellescape(g:file_path))
     endif
     
     execute 'edit ' . g:file_path
