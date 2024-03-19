@@ -16,6 +16,34 @@ function! noterius#ReplacePlaceholders()
     endif
 endfunction
 
+" TimPope's eunich's inspired CopyFile function
+function! noterius#CopyFile(src, dst)
+  " Check if the source file exists
+  if !filereadable(a:src)
+    echo "Source file does not exist: " . a:src
+    return
+  endif
+
+  " Ensure the destination directory exists
+  let dst_dir = fnamemodify(a:dst, ':h')
+  if !isdirectory(dst_dir)
+    call mkdir(dst_dir, "p")
+  endif
+
+  " Copy the file
+  try
+    " Attempt to use Vim's 'writefile' function along with 'readfile' for the copy operation
+    let content = readfile(a:src, 'b')
+    call writefile(content, a:dst, 'b')
+  catch
+    echo "Failed to copy file from " . a:src . " to " . a:dst
+    return
+  endtry
+
+  echo "File copied from " . a:src . " to " . a:dst
+endfunction
+
+
 function! noterius#NoteriusToday()
     " Check if the directory exists and create it if not
     if !isdirectory(g:dir_path)
@@ -23,9 +51,10 @@ function! noterius#NoteriusToday()
     endif
     
     " Check if the note file exists and copy the template if not
-    if !filereadable(g:file_path)
-		call system('cp ' . shellescape(g:template_path) . ' ' . shellescape(g:file_path))
-    endif
+    "if !filereadable(g:file_path)
+	"	call system('cp ' . shellescape(g:template_path) . ' ' . shellescape(g:file_path))
+    "endif
+	noterius#CopyFile(g:template_path, g:file_path)
 	echo g:file_path
 	echo g:template_path
     
