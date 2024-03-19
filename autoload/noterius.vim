@@ -54,7 +54,7 @@ function! noterius#NoteriusToday()
     "if !filereadable(g:file_path)
 	"	call system('cp ' . shellescape(g:template_path) . ' ' . shellescape(g:file_path))
     "endif
-	noterius#CopyFile(g:template_path, g:file_path)
+	call noterius#CopyFile(g:template_path, g:file_path)
 	echo g:file_path
 	echo g:template_path
     
