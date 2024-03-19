@@ -247,7 +247,10 @@ function! noterius#DisplayNoteriusQuickhelp()
     setlocal nomodifiable
 endfunction
 
+command! SetupNoteriusNotes call noterius#SetupNoteriusNotes()
 command! FindPreviousNote call noterius#FindPreviousNote()
 command! FindNextNote call noterius#FindNextNote()
 command! OpenNoteByDate call noterius#OpenNoteByDate()
 command! DisplayNoteriusQuickhelp call noterius#DisplayNoteriusQuickhelp()
+command! NoteriusGitPull call noterius#NoteriusSyncWithRemoteRepo(expand(g:noterius_notes_dir))
+

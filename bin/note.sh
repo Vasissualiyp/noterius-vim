@@ -7,9 +7,9 @@ citerius_integration=1 # 1 to enable citerius integration
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 NOTERIUS_SRC_DIR="$SCRIPT_DIR/.."
 CITERIUS_SRC_DIR="$HOME/research/references"
-TEMPLATES_SRC_DIR="$NOTERIUS_SRC_DIR/templates"
 
 notes_main_dir="$HOME/research/notes"
+TEMPLATES_SRC_DIR="$notes_main_dir/templates"
 template_path="${TEMPLATES_SRC_DIR}/notes_template.tex"
 
 # Get the current time in hours and minutes
