@@ -74,7 +74,7 @@ function! noterius#NoteriusToday()
 endfunction
 
 " -------------------------- CLEANUP ---------------------------------
-function! NoteriusCleanup()
+function! noterius#NoteriusCleanup()
     execute '! ' . shellescape(g:noterius_source_dir) . '/bin/cleanup.sh ' . shellescape(expand(g:noterius_notes_dir))
 endfunction
 " -------------------------- SETUP NOTERIUS ---------------------------------

@@ -31,7 +31,7 @@ function! noterius#InitPaths()
 endfunction
 
 command! NoteriusToday call noterius#NoteriusToday()
-command! NoteriusCleanup call CleanupNotes()
+command! NoteriusCleanup call noterius#NoteriusCleanup()
 command! SetupNoteriusNotes call noterius#SetupNoteriusNotes()
 command! FindPreviousNote call noterius#FindPreviousNote()
 command! FindNextNote call noterius#FindNextNote()
