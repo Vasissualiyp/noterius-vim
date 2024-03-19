@@ -1,3 +1,60 @@
+" Define global variables
+let g:author = "Vasilii Pustovoit"
+let g:citerius_integration = 1 " 1 to enable, 0 to disable
+let g:vim_type = "nvim" " or 'vim'
+
+" Directories and paths
+let g:script_dir = fnamemodify(expand('<sfile>:p'), ':h')
+let g:noterius_src_dir = g:script_dir . '/..'
+let g:citerius_src_dir = $HOME . '/research/references'
+let g:notes_main_dir = $HOME . '/research/notes'
+let g:templates_src_dir = g:notes_main_dir . '/templates'
+let g:template_path = g:templates_src_dir . '/notes_template.tex'
+
+" Get the current time and date
+let g:current_time = strftime('%H:%M')
+let g:current_date = strftime('%Y-%m-%d')
+
+" Replace placeholders within the open document
+function! noterius#ReplacePlaceholders()
+    " Replace <today> with the current date
+    %s/<today>/\=g:current_date/g
+    
+    " Replace <noterius_src> with the Noterius source directory
+    %s/<noterius_src>/\=escape(g:noterius_src_dir, '\/')/g
+
+    " Replace <author> with the author name
+    %s/<author>/\=g:author/g
+
+    " Conditional replacement for <citations_src> based on Citerius integration
+    if g:citerius_integration == 1
+        %s/<citations_src>/\=escape(g:citerius_src_dir, '\/')/g
+    else
+        " Remove lines containing 'citations_src' or 'printbibliography'
+        g/citations_src/d
+        g/printbibliography/d
+    endif
+endfunction
+
+function! noterius#NoteriusToday()
+    " Check if the directory exists and create it if not
+    if !isdirectory(g:dir_path)
+        call mkdir(g:dir_path, "p")
+    endif
+    
+    " Check if the note file exists and copy the template if not
+    if !filereadable(g:file_path)
+        call copy(g:template_path, g:file_path)
+    endif
+    
+    execute 'edit ' . g:file_path
+    
+    " Call the function to perform replacements
+    call noterius#ReplacePlaceholders()
+    
+    write
+endfunction
+
 function! noterius#SetupNoteriusNotes()
     " Ensure the global variable for notes directory is defined
     if !exists('g:noterius_notes_dir')
@@ -27,7 +84,7 @@ function! noterius#SetupNoteriusNotes()
         if exists('g:noterius_git_url')
             let git_url = g:noterius_git_url
             call system('cd ' . shellescape(notes_dir) . ' && git remote add origin ' . shellescape(git_url) . ' && git branch -M main')
-			call NoteriusSyncWithRemoteRepo(notes_dir)
+			call noterius#NoteriusSyncWithRemoteRepo(notes_dir)
 			
         else
             " Copy the templates directory to the notes directory
@@ -246,9 +303,10 @@ function! noterius#DisplayNoteriusQuickhelp()
     setlocal nomodifiable
 endfunction
 
-command! SetupNoteriusNotes call noterius#SetupNoteriusNotes()
-command! FindPreviousNote call noterius#FindPreviousNote()
-command! FindNextNote call noterius#FindNextNote()
-command! OpenNoteByDate call noterius#OpenNoteByDate()
-command! DisplayNoteriusQuickhelp call noterius#DisplayNoteriusQuickhelp()
-command! NoteriusGitPull call noterius#NoteriusSyncWithRemoteRepo(expand(g:noterius_notes_dir))
+"command! NoteriusToday call noterius#NoteriusToday()
+"command! SetupNoteriusNotes call noterius#SetupNoteriusNotes()
+"command! FindPreviousNote call noterius#FindPreviousNote()
+"command! FindNextNote call noterius#FindNextNote()
+"command! OpenNoteByDate call noterius#OpenNoteByDate()
+"command! DisplayNoteriusQuickhelp call noterius#DisplayNoteriusQuickhelp()
+"command! NoteriusGitPull call noterius#NoteriusSyncWithRemoteRepo(expand(g:noterius_notes_dir))

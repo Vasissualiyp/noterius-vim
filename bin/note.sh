@@ -2,6 +2,7 @@
 
 author="Vasilii Pustovoit"
 citerius_integration=1 # 1 to enable citerius integration
+vim_type="nvim"
 
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -131,7 +132,9 @@ fi
 echo "$current_date" > ~/research/notes/.last_note_date
 
 # Open the file in vim and place the cursor on line n
-#vim -c "1,/begin{document}/-1 fold" + "$file_path"
 cd "$dir_path"
-nvim -c "set foldmethod=marker" "$file_path"
-#vim -c "set foldmethod=marker" "$file_path"
+if [ "$vim_type" == "nvim" ]; then
+    nvim -c "set foldmethod=marker" "$file_path"
+elif [ "$vim_type" == "vim" ]; then
+    vim -c "set foldmethod=marker" "$file_path"
+fi

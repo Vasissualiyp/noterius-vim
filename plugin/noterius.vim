@@ -15,6 +15,24 @@ let g:noterius_quickhelp_path = expand(notes_dir) . '/templates/quickhelp.tex'
 let g:noterius_notes_template_path = expand(notes_dir) . '/templates/notes_template.tex'
 let g:noterius_header_path = expand(notes_dir) . '/templates/header.tex'
 
+" Define global variables
+let g:author = "Vasilii Pustovoit"
+let g:citerius_integration = 1 " 1 to enable, 0 to disable
+let g:vim_type = "nvim" " or 'vim'
+
+" Directories and paths
+let g:script_dir = fnamemodify(expand('<sfile>:p'), ':h')
+let g:noterius_src_dir = g:script_dir . '/..'
+let g:citerius_src_dir = $HOME . '/research/references'
+let g:notes_main_dir = $HOME . '/research/notes'
+let g:templates_src_dir = g:notes_main_dir . '/templates'
+let g:template_path = g:templates_src_dir . '/notes_template.tex'
+
+" Get the current time and date
+let g:current_time = strftime('%H:%M')
+let g:current_date = strftime('%Y-%m-%d')
+
+command! NoteriusToday call noterius#NoteriusToday()
 command! SetupNoteriusNotes call noterius#SetupNoteriusNotes()
 command! FindPreviousNote call noterius#FindPreviousNote()
 command! FindNextNote call noterius#FindNextNote()
