@@ -1,3 +1,4 @@
+" -------------------------- NOTE.SH ---------------------------------
 " Replace placeholders within the open document
 function! noterius#ReplacePlaceholders()
     " Ensure the buffer is modifiable and writable
@@ -72,6 +73,77 @@ function! noterius#NoteriusToday()
 	execute 'VimtexReloadState' 
 endfunction
 
+" -------------------------- CLEANUP ---------------------------------
+
+" Function to remove notes-related files except for notes.tex
+function! CleanupNotesFiles(dir)
+    let files_removed = v:false
+    " List all 'notes.*' files except 'notes.tex'
+    for file in split(glob(a:dir . '/notes.*'), "\n")
+        if filereadable(file) && file !=# a:dir . '/notes.tex'
+            let files_removed = v:true
+            call delete(file)
+        endif
+    endfor
+    return files_removed
+endfunction
+
+" Function to check the content of notes.tex
+function! CheckFile(file)
+    let content = join(readfile(a:file), "\n")
+    let document_content = matchstr(content, '\\begin{document}\\_.\\{-}\\end{document}')
+    let lines = split(document_content, "\n")
+    for line in lines
+        if line !~ '^\s*%' && line !~ '^\s*$' && line !~ '\\newpage' && line !~ '\\section{Footnote}' && line !~ '\\maketitle'
+            return v:true
+        endif
+    endfor
+    return v:false
+endfunction
+
+" Function to process each day's directory
+function! ProcessDayDir(day_dir)
+    let notes_file = a:day_dir . '/notes.tex'
+    if filereadable(notes_file)
+        if Call('CheckFile', notes_file)
+            let files_removed = Call('CleanupNotesFiles', a:day_dir)
+            if files_removed
+                echom "Cleaning up the build files: " . a:day_dir
+            endif
+        else
+            echom "Removing notes directory with only comments or empty lines: " . a:day_dir
+            call delete(a:day_dir, 'rf')
+        endif
+    endif
+endfunction
+
+" Main function to start the cleanup process
+function! CleanupNotes()
+    " Loop over years and months
+    for year in range(2023, strftime('%Y'))
+        let year_dir = g:noterius_notes_dir . '/' . year
+        if isdirectory(year_dir)
+            for month in range(1, 12)
+                let month_dir = year_dir . '/' . printf('%02d', month)
+                if isdirectory(month_dir)
+                    " Process each day in the month
+                    for day in range(1, 31)
+                        let day_dir = month_dir . '/' . printf('%02d', day)
+                        if isdirectory(day_dir)
+                            call ProcessDayDir(day_dir)
+                        endif
+                    endfor
+                endif
+            endfor
+        endif
+    endfor
+endfunction
+
+" Command to trigger the cleanup
+command! NoteriusCleanup call CleanupNotes()
+
+" -------------------------- SETUP NOTERIUS ---------------------------------
+
 function! noterius#SetupNoteriusNotes()
     " Ensure the global variable for notes directory is defined
     if !exists('g:noterius_notes_dir')
@@ -115,6 +187,8 @@ function! noterius#SetupNoteriusNotes()
     echo "Noterius notes setup completed."
 endfunction
 
+" -------------------------- GIT PULL ---------------------------------
+
 function! noterius#NoteriusSyncWithRemoteRepo(gitDir)
     " Save the current working directory
     let l:originalDir = getcwd()
@@ -148,6 +222,8 @@ function! noterius#NoteriusSyncWithRemoteRepo(gitDir)
     execute 'cd' l:originalDir
 endfunction
 
+" -------------------------- NOTES NAVIGATION ---------------------------------
+
 " Expose the function as a command
 function! noterius#FindNextNote()
     let l:filepath = expand("%:p")
@@ -177,8 +253,6 @@ function! noterius#FindNextNote()
         endif
 
 	let l:newpath = "/" . l:basepath . "/" . printf("%04d", l:year) . "/" . printf("%02d", l:month) . "/" . printf("%02d", l:day) . "/notes.tex"
-
-	
 
 	let is_readable = filereadable(l:newpath)
         if is_readable
@@ -243,6 +317,8 @@ function! noterius#FindPreviousNote()
     endwhile
 endfunction
 
+" -------------------------- OPEN NOTE BY DATE ---------------------------------
+
 function! noterius#OpenNoteByDate()
     " Prompt the user for input
     let l:input = input('Enter date (YYYY-MM-DD) or day of the week (e.g., Mon, Tue, etc.), or press Enter for today: ')
@@ -298,6 +374,8 @@ function! noterius#OpenNoteByDate()
         echo "No note found for " . l:date
     endif
 endfunction
+
+" -------------------------- QUICKHELP ---------------------------------
 
 function! noterius#DisplayNoteriusQuickhelp()
     let l:quickhelp_path = get(g:, 'noterius_quickhelp_path', '')

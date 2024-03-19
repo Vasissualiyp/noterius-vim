@@ -3,7 +3,7 @@ local M = {}
 function M.setup(opts)
   -- Set defaults
   local defaults = {
-    notes_dir = '~/research/test',
+    notes_dir = '~/research/notes',
     author = 'User',
     citerius_integration = 0,
     citerius_src_dir = vim.fn.expand('$HOME') .. '/research/references',
