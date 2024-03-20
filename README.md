@@ -71,64 +71,128 @@ Noterius enhances your note-taking process in Vim/Neovim, especially for LaTeX u
 
 After installing, remember to run `:PlugInstall` or the equivalent command for your plugin manager to activate Noterius.
 
+#### Setup of Noterius environment
+
+After you have downloaded the plugin, please see below for suggested configuration. Include the configuration in the editor of your choice.
+Make sure that you define the global variables as you would like (i.e. your name, remote git url if you will be using it...)
+If you are going to use any remote git repo (i.e. GitHub), create it before you add the url. Make sure to do all that before you setup Noterius below,
+and do not commit anything in that repo yet!
+
+After you restarted the editor, run `:SetupNoteriusNotes`. This will create the directory for the notes, that you have specified in your configuration file,
+copy template files for latex header, overall notes template and quickhelp menu. All those files will be referenced in your future configurations,
+so if you want to change them, change them in your notes repo.
+
+Once the script was ran, you now can use `:NoteriusToday` (or your pre-defined keybind) to create a note for the current day.
+
 ### Configuration
 
-#### Vim
+Here are suggested configurations for vim (`.vimrc`) and neovim (`init.lua`)
 
-In your `.vimrc`, you can set keybindings directly. While Noterius's advanced search features with Telescope are exclusive to Neovim, basic note management is fully available in Vim.
+#### Vim 
+Add the following to your .vimrc:
+```
+Copy code
+" Global variables
+let g:noterius_notes_dir = '~/research/notes'
+let g:noterius_git_url = 'git@github.com:your_git_username/your_git_dir.git'
 
-```vim
-" Keybindings for managing notes
+" Folding keymaps
+nnoremap <leader>zo :execute "normal! ggVGzo"<CR>
+nnoremap <leader>zm :execute "normal! ggVGzc"<CR>
+
+" Note management keybindings
+nnoremap <leader>N :NoteriusToday<CR>
+nnoremap <leader>nc :NoteriusCleanup<CR>
 nnoremap <leader>nn :FindNextNote<CR>
 nnoremap <leader>np :FindPreviousNote<CR>
 nnoremap <leader>no :OpenNoteByDate<CR>
 nnoremap <leader>n? :DisplayNoteriusQuickhelp<CR>
+nnoremap <leader>np :NoteriusGitPush<CR>
+nnoremap <leader>ns :NoteriusSyncWithRemoteRepo<CR>
+
+" Initialize Noterius paths on Vim start - AFTER definition of global variables
+autocmd VimEnter * call noterius#InitPaths()
 ```
 
-#### Neovim
+This setup for Vim includes the necessary global variable definitions, a command to initialize Noterius paths when Vim starts, and keybindings for both note management and folding.
 
-For Neovim users, `init.lua` allows you to set up Noterius and integrate with Telescope if installed. Below is how you configure it, including what each line does:
+#### Neovim Configuration
+For your init.lua in Neovim:
 
-```lua
--- Define the directory where your notes are stored
-local notes_dir = vim.fn.expand('~/research/notes')
+```
+Copy code
+-- Global variables
+vim.g.noterius_notes_dir = '~/research/notes'
+vim.g.noterius_git_url = 'git@github.com:your_git_username/your_git_dir.git'
 
--- Set up Noterius with the path to your notes
-require('noterius-vim.noterius_telescope').setup({
-  notes_dir = notes_dir,
+-- Folding keymaps
+vim.keymap.set('n', '<leader>zo', 'ggVGzO<Esc>', { silent = true })
+vim.keymap.set('n', '<leader>zm', 'ggVGzM<Esc>', { silent = true })
+
+-- Note management keybindings
+vim.keymap.set('n', '<leader>N' , ':NoteriusToday<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>nc', ':NoteriusCleanup<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>nn', ':FindNextNote<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>np', ':FindPreviousNote<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>no', ':OpenNoteByDate<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>n?', ':DisplayNoteriusQuickhelp<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>np', ':NoteriusGitPush<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ns', ':NoteriusSyncWithRemoteRepo<CR>', { noremap = true, silent = true })
+
+-- Additional Neovim-specific keybindings for enhanced functionality
+-- Include any Neovim-specific keybindings here, like those for Telescope
+
+-- Initialize Noterius. This MUST be included after the definitions of global variables!
+require('noterius-vim.init').setup({
+  notes_dir = '~/research/notes',
+  author = 'Your Name',
+  citerius_integration = 1,
+  citerius_src_dir = '~/research/references',
 })
-
--- Keybindings for note folding
-vim.keymap.set('n', '<leader>zo', 'ggjVGkkzo<Esc><Esc>gg', { silent = true }) -- Fold opened notes
-vim.keymap.set('n', '<leader>zm', 'ggjVGkkzm<Esc><Esc>gg', { silent = true }) -- Fold closed notes
-
--- Basic note management keybindings
-vim.keymap.set('n', '<leader>nn', ':FindNextNote<CR>', { silent = true }) -- Find the next note
-vim.keymap.set('n', '<leader>np', ':FindPreviousNote<CR>', { silent = true }) -- Find the previous note
-vim.keymap.set('n', '<leader>no', ':OpenNoteByDate<CR>', { silent = true }) -- Open a note by date
-vim.keymap.set('n', '<leader>n?', ':DisplayNoteriusQuickhelp<CR>', { silent = true }) -- Display quick help
-
--- Telescope integration for enhanced search in Neovim
-local noterius_telescope = require('noterius-vim.noterius_telescope')
-vim.keymap.set('n', '<leader>ng', noterius_telescope.grep_notes, { silent = true }) -- Grep through notes
-vim.keymap.set('n', '<leader>nf', noterius_telescope.find_notes, { silent = true }) -- Find notes by name
 ```
+This Neovim setup mirrors the Vim configuration while providing the flexibility to include Neovim-specific keybindings or features, such as those provided by Telescope.
 
-This setup enables:
-- Folding and unfolding of your notes for better readability.
-- Navigation between notes based on a chronological sequence or specific dates.
-- Quick access to a help overview.
-- **For Neovim users**: Utilizing Telescope to search within your notes by content or filename, significantly enhancing your ability to find specific entries.
+Notes:
+Both configurations define the same global variables and include keybindings for folding and note management.
+The Neovim setup uses Lua for defining keybindings and setting up Noterius, including extra functions that might be specific to Neovim.
+The autocmd VimEnter * call noterius#InitPaths() in the Vim setup and the corresponding Lua setup in Neovim ensure that Noterius is correctly initialized after all configurations are loaded.
+Adjust the paths and URLs as necessary to fit your setup.
 
-Remember, the Telescope-based features are specific to Neovim due to its Lua integration capabilities, offering a richer, more interactive experience when dealing with extensive notes.
+## Usage
 
-## Upcoming Features and Integration
+Noterius sources template files in the notes directory. Whenever you create a new journal entry for today (a single entry is supported per day),
+the `notes_template.tex` file gets copied, and all variables in angled brackets get altered (i.e. <today> becomes the current date).
+The `header.tex` file gets included in that file. In this header file, you can define all custom functions (like note is defined as an example), and
+since the header is sourced in every single journal entry, the same header would automatically apply to all notes.
+This was done to improve customizability and decrease the disk space bloat that would happen if your headers tend to be large.
 
-Future releases aim to fully integrate the original Noterius's bash script functionalities directly into Vimscript and Lua, offering a unified and streamlined experience across both Vim and NeoVim. These will include enhanced version control automation, sophisticated workspace cleanup, and dynamic LaTeX note generation and management.
+You can obtain notes for a specific date by using `:OpenNoteByDate` and following with the note in YYYY-MM-DD format.
+The same function also would open the last weekday note, if you provide a weekday 3-letter anagram 
+(So if today is Tuesday, and you ask for Wed note, it would open a note from 6 days ago if it exists)
+
+You can jump to next/previous note using `:FindNextNote/:FindPreviousNote`.
+
+`:DisplayNoteriusQuickhelp` would display a quickhelp menu for your personal use that you can modify.
+For instance, I use it to associate the colors of the notes with a type of a note.
+
+`:NoteriusCleanup` would cleanup all the build files. This is useful to do periodically to prevent the notes taking a lot of space with all the buildfiles and pdfs,
+unless you are using `:NoteriusGitPush`.
+
+`:NoteriusSyncWithRemoteRepo` git pulls from the remote git repo that you have defined.
+
+`:NoteriusGitPush` performs cleanup and commits the notes to git repo. No build files or pdfs get committed, since the cleanup gets rid of them.
+Any extra files that you leave in the directory (i.e. other directories with your figures) will be committed.
+
+## Upcoming Features 
+
+Seamless integration with my Citerius utility would simplify reference management.
 
 ## Customization
 
-Customize your LaTeX template (`notes_template.tex`) to match your note-taking preferences. Further customization options and additional functionalities will be progressively documented and made available, ensuring Noterius adapts to your workflow.
+Customize your LaTeX templates in the `templates` folder to match your note-taking preferences. Further customization options and additional functionalities will be progressively documented and made available, ensuring Noterius adapts to your workflow.
+
+My personal suggestion is to read up on aforementioned [workflow](https://castel.dev/post/lecture-notes-1/) by Giles Castelle, which was a major inspiration for this project.
+It also tells you about the use of `UltiSnips` vim plugin, which enchances notetaking dramatically.
 
 ## Contribution
 

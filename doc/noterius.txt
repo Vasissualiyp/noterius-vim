@@ -1,0 +1,54 @@
+NOTERIUS PLUGIN MANUAL                                                      
+
+CONTENTS
+1. Introduction
+2. Installation
+3. Commands
+4. Configuration
+5. Customization
+6. Integration
+
+1. INTRODUCTION
+Noterius is a Vim/Neovim plugin designed for efficient journaling and note-taking within the LaTeX environment. It automates the creation of daily journal entries, manages note files, and integrates seamlessly with Git for version control. The plugin focuses on customizability, minimal disk usage, and ease of navigation between notes.
+
+2. INSTALLATION
+Place Noterius files in your Vim plugin directory or use a plugin manager such as vim-plug, Vundle, or Pathogen. For Neovim users, ensure the Lua configuration is added to your init.lua.
+
+3. COMMANDS
+:NoteriusToday
+    Creates a journal entry for today using the notes_template.tex file as a template. Variables within angled brackets in the template (e.g., <today>) are automatically replaced with their corresponding values.
+
+:OpenNoteByDate {date}
+    Opens a note for a specific date provided in YYYY-MM-DD format or the last note for a given weekday if a 3-letter weekday abbreviation is used.
+
+:FindNextNote
+    Jumps to the next chronological note entry.
+
+:FindPreviousNote
+    Jumps to the previous chronological note entry.
+
+:DisplayNoteriusQuickhelp
+    Displays a customizable quick help guide for note-taking conventions, such as color associations for note types.
+
+:NoteriusCleanup
+    Removes build files and PDFs from the notes directory to free up disk space.
+
+:NoteriusSyncWithRemoteRepo
+    Pulls the latest changes from the configured remote Git repository.
+
+:NoteriusGitPush
+    Commits changes to the remote Git repository after performing a cleanup to ensure no build files or PDFs are included.
+
+4. CONFIGURATION
+The plugin relies on global variables for customization, which can be set in your .vimrc or init.lua file. Key variables include:
+
+- g:noterius_notes_dir: Directory where note files are stored.
+- g:noterius_git_url: URL of the Git repository for syncing notes.
+
+5. CUSTOMIZATION
+The header.tex file, sourced in each journal entry, can be customized with LaTeX commands and environments to suit your note-taking style. This file allows for consistent formatting and functionality across all notes.
+
+6. INTEGRATION
+Noterius integrates with the Telescope plugin in Neovim for enhanced note searching capabilities. Vim users can also benefit from Noterius's basic note management features.
+
+END OF NOTERIUS MANUAL
