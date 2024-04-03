@@ -8,7 +8,7 @@ function! noterius#ReplacePlaceholders()
     " Your search and replace operations
     %s/<today>/\=g:current_date/g
     %s/<noterius_src>/\=g:noterius_notes_dir/g
-    %s/<author>/\=g:author/g
+    %s/<author>/\=g:noterius_author/g
     if g:citerius_integration == 1
         %s/<citations_src>/\=g:citerius_src_dir/g
     else
