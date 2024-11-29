@@ -16,15 +16,17 @@ function M.grep_notes()
   end
 
   require('telescope.builtin').live_grep({
-    search_dirs = {M.notes_dir},
+    search_dirs = { M.notes_dir },
     additional_args = function(opts)
-      return {"--glob", "*.tex"}
+      return { "--glob", "*.tex" }
     end,
     path_display = function(opts, path)
       if not path then return '' end
       local tail = require("telescope.utils").path_tail(path)
       local relative_path = path:sub(#M.notes_dir + 2)
-      return string.gsub(relative_path, "(.*/)(%d+/%d+/%d+)/(.*)", "%2/" .. tail)
+      -- Ensure only the first return value is returned
+      local formatted_path = string.gsub(relative_path, "(.*/)(%d+/%d+/%d+)/(.*)", "%2/" .. tail)
+      return formatted_path
     end,
   })
 end
@@ -37,13 +39,15 @@ function M.search_notes()
   end
 
   require('telescope.builtin').find_files({
-    search_dirs = {M.notes_dir},
-    find_command = {'rg', '--files', '--type', 'tex', '--glob', '*.tex'},
+    search_dirs = { M.notes_dir },
+    find_command = { 'rg', '--files', '--type', 'tex', '--glob', '*.tex' },
     path_display = function(opts, path)
       if not path then return '' end
       local tail = require("telescope.utils").path_tail(path)
       local relative_path = path:sub(#M.notes_dir + 2)
-      return string.gsub(relative_path, "(.*/)(%d+/%d+/%d+)/(.*)", "%2/" .. tail)
+      -- Ensure only the first return value is returned
+      local formatted_path = string.gsub(relative_path, "(.*/)(%d+/%d+/%d+)/(.*)", "%2/" .. tail)
+      return formatted_path
     end,
   })
 end
