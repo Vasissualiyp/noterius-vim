@@ -195,7 +195,7 @@ Seamless integration with my Citerius utility would simplify reference managemen
 Customize your LaTeX templates in the `templates` folder to match your note-taking preferences. Further customization options and additional functionalities will be progressively documented and made available, ensuring Noterius adapts to your workflow.
 
 My personal suggestion is to read up on aforementioned [workflow](https://castel.dev/post/lecture-notes-1/) by Giles Castelle, which was a major inspiration for this project.
-It also tells you about the use of `UltiSnips` vim plugin, which enchances notetaking dramatically.
+It also tells you about the use of `UltiSnips` vim plugin, which enchances notetaking experience dramatically.
 
 ## Contribution
 
