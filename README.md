@@ -71,6 +71,9 @@ Noterius enhances your note-taking process in Vim/Neovim, especially for LaTeX u
 
 After installing, remember to run `:PlugInstall` or the equivalent command for your plugin manager to activate Noterius.
 
+#### ⚠️ Incompatability ⚠️
+The telescope grep currently breaks if you also have vimspector installed.
+
 #### Setup of Noterius environment
 
 After you have downloaded the plugin, please see below for suggested configuration. Include the configuration in the editor of your choice.
