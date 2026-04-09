@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Logseq Sync Script for Noterius
 # Syncs LaTeX notes with Logseq journals, creating bidirectional links
@@ -119,9 +119,9 @@ find_prev_entry() {
         fi
 
         # Format with leading zeros
-        local year_str=$(printf "%04d" $year)
-        local month_str=$(printf "%02d" $month)
-        local day_str=$(printf "%02d" $day)
+        local year_str=$(printf "%04d" ${year#0})
+        local month_str=$(printf "%02d" ${month#0})
+        local day_str=$(printf "%02d" ${day#0})
 
         local logseq_path="${LOGSEQ_DIR}/${year_str}_${month_str}_${day_str}.md"
 
@@ -149,11 +149,11 @@ find_next_entry() {
         day=$((10#$day + 1))
 
         # Handle month boundaries
-        if [ $day -gt 31 ] || ([ $month -eq 2 ] && [ $day -gt 29 ]) || \
-           ([ $month -eq 4 ] && [ $day -gt 30 ]) || ([ $month -eq 6 ] && [ $day -gt 30 ]) || \
-           ([ $month -eq 9 ] && [ $day -gt 30 ]) || ([ $month -eq 11 ] && [ $day -gt 30 ]); then
+        if [ $((10#$day)) -gt 31 ] || ([ $((10#$month)) -eq 2 ] && [ $((10#$day)) -gt 29 ]) || \
+           ([ $((10#$month)) -eq 4 ] && [ $((10)) -gt 30 ]) || ([ $((10#$month)) -eq 6 ] && [ $((10#$day)) -gt 30 ]) || \
+           ([ $((10#$month)) -eq 9 ] && [ $((10)) -gt 30 ]) || ([ $((10#$month)) -eq 11 ] && [ $((10#$day)) -gt 30 ]); then
             day=1
-            month=$((month + 1))
+            month=$((10#$month + 1))
         fi
 
         # Handle year boundaries
@@ -163,9 +163,9 @@ find_next_entry() {
         fi
 
         # Format with leading zeros
-        local year_str=$(printf "%04d" $year)
-        local month_str=$(printf "%02d" $month)
-        local day_str=$(printf "%02d" $day)
+        local year_str=$(printf "%04d" ${year#0})
+        local month_str=$(printf "%02d" ${month#0})
+        local day_str=$(printf "%02d" ${day#0})
 
         local logseq_path="${LOGSEQ_DIR}/${year_str}_${month_str}_${day_str}.md"
 
@@ -192,7 +192,7 @@ update_prev_link() {
         return
     fi
 
-    local prev_date=$(printf "%04d-%02d-%02d" "$prev_year" "$prev_month" "$prev_day")
+    local prev_date=$(printf "%04d-%02d-%02d" "${prev_year#0}" "${prev_month#0}" "${prev_day#0}")
     local prev_link="- PREV: [[$prev_date]]"
 
     # Create temp file
@@ -222,7 +222,7 @@ update_next_link() {
         return
     fi
 
-    local next_date=$(printf "%04d-%02d-%02d" "$next_year" "$next_month" "$next_day")
+    local next_date=$(printf "%04d-%02d-%02d" "${next_year#0}" "${next_month#0}" "${next_day#0}")
     local next_link="- NEXT: [[$next_date]]"
 
     # Create temp file
@@ -236,7 +236,7 @@ update_next_link() {
     else
         # Add NEXT link after PREV link if it exists, otherwise at the beginning
         if grep -q "^-\s*PREV:" "$logseq_file"; then
-            awk -v next="$next_link" '/^-\s*PREV:/{print; print next; next}1' "$logseq_file" > "$temp_file"
+            awk -v nextlink="$next_link" '/^-\s*PREV:/{print; print nextlink; next}1' "$logseq_file" > "$temp_file"
             mv "$temp_file" "$logseq_file"
         else
             echo "$next_link" > "$temp_file"
@@ -258,7 +258,7 @@ update_latex_link() {
     local latex_link="- ![LaTeX]($pdf_path)"
 
     # Check if LaTeX link already exists
-    if grep -q "^-\s*![LaTeX\]" "$logseq_file"; then
+    if grep -q "^-\s*!\[LaTeX\]" "$logseq_file"; then
         # Link already exists, don't update
         return
     fi
@@ -298,18 +298,18 @@ link_handwritten_notes() {
     fi
 
     # Check if handwritten notes section already exists
-    if grep -q "^## Handwritten Notes" "$logseq_file"; then
+    if grep -q "^- ## Handwritten Notes" "$logseq_file"; then
         return
     fi
 
     # Add handwritten notes section
     echo "" >> "$logseq_file"
-    echo "## Handwritten Notes" >> "$logseq_file"
+    echo "- ## Handwritten Notes" >> "$logseq_file"
 
     for svg_file in $svg_files; do
         local filename=$(basename "$svg_file")
         local relative_path="../assets/svg/${year}/${month}/${day}/${filename}"
-        echo "![]($relative_path)" >> "$logseq_file"
+        echo "- ![]($relative_path){:width 600}" >> "$logseq_file"
     done
 }
 
@@ -347,7 +347,7 @@ sync_latex_to_logseq() {
             local prev_entry=$(find_prev_entry "$year" "$month" "$day")
             if [ -n "$prev_entry" ]; then
                 IFS=',' read -r prev_year prev_month prev_day <<< "$prev_entry"
-                local prev_date=$(printf "%04d-%02d-%02d" "$prev_year" "$prev_month" "$prev_day")
+                local prev_date=$(printf "%04d-%02d-%02d" "${prev_year#0}" "${prev_month#0}" "${prev_day#0}")
                 echo "- PREV: [[$prev_date]]" >> "$logseq_file"
 
                 # Update previous entry's NEXT link
@@ -359,7 +359,7 @@ sync_latex_to_logseq() {
             local next_entry=$(find_next_entry "$year" "$month" "$day")
             if [ -n "$next_entry" ]; then
                 IFS=',' read -r next_year next_month next_day <<< "$next_entry"
-                local next_date=$(printf "%04d-%02d-%02d" "$next_year" "$next_month" "$next_day")
+                local next_date=$(printf "%04d-%02d-%02d" "${next_year#0}" "${next_month#0}" "${next_day#0}")
                 echo "- NEXT: [[$next_date]]" >> "$logseq_file"
 
                 # Update next entry's PREV link

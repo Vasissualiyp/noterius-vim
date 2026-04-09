@@ -567,7 +567,7 @@ function! noterius#UpdateLogseqLatexLink(logseq_path, latex_url)
 
     " Check if LaTeX link already exists
     for l:line in l:lines
-        if l:line =~# '^-\s*![LaTeX\]'
+        if l:line =~# '^-\s*!\[LaTeX\]'
             let l:has_latex_link = 1
             break
         endif
@@ -682,7 +682,7 @@ function! noterius#LinkHandwrittenNotes(logseq_path, year, month, day)
     " Check if handwritten notes section already exists
     let l:has_handwritten_section = 0
     for l:line in l:lines
-        if l:line =~# '^## Handwritten Notes'
+        if l:line =~# '^- ## Handwritten Notes'
             let l:has_handwritten_section = 1
             break
         endif
@@ -694,13 +694,13 @@ function! noterius#LinkHandwrittenNotes(logseq_path, year, month, day)
         if len(l:lines) > 0
             call add(l:lines, '')
         endif
-        call add(l:lines, '## Handwritten Notes')
+        call add(l:lines, '- ## Handwritten Notes')
 
         " Add each SVG file
         for l:svg_file in l:svg_files
             let l:filename = fnamemodify(l:svg_file, ':t')
             let l:relative_path = '../assets/svg/' . printf('%04d/%02d/%02d/', a:year, a:month, a:day) . l:filename
-            call add(l:lines, '![](' . l:relative_path . ')')
+            call add(l:lines, '- ![](' . l:relative_path . '){:width 600}')
         endfor
 
         " Write back to file
