@@ -73,7 +73,7 @@ is_logseq_empty() {
         fi
 
         # Skip PREV and NEXT links
-        if echo "$line" | grep -qE '^\s*-\s*(PREV|NEXT):'; then
+        if echo "$line" | grep -qE '^\s*-\s*!\[(PREV|NEXT)\]'; then
             continue
         fi
 
@@ -192,16 +192,16 @@ update_prev_link() {
         return
     fi
 
-    local prev_display=$(format_display_date "$prev_year" "$prev_month" "$prev_day")
-    local prev_link="- PREV: [[$prev_display]]"
+    local prev_date=$(printf "%04d-%02d-%02d" "$prev_year" "$prev_month" "$prev_day")
+    local prev_link="- ![PREV]($prev_date)"
 
     # Create temp file
     local temp_file=$(mktemp)
 
     # Check if PREV link exists
-    if grep -q "^-\s*PREV:" "$logseq_file"; then
+    if grep -q "^-\s*!\[PREV\]" "$logseq_file"; then
         # Replace existing PREV link
-        sed "s|^-\s*PREV:.*|$prev_link|" "$logseq_file" > "$temp_file"
+        sed "s|^-\s*!\[PREV\].*|$prev_link|" "$logseq_file" > "$temp_file"
     else
         # Add PREV link at the beginning
         echo "$prev_link" > "$temp_file"
@@ -222,21 +222,21 @@ update_next_link() {
         return
     fi
 
-    local next_display=$(format_display_date "$next_year" "$next_month" "$next_day")
-    local next_link="- NEXT: [[$next_display]]"
+    local next_date=$(printf "%04d-%02d-%02d" "$next_year" "$next_month" "$next_day")
+    local next_link="- ![NEXT]($next_date)"
 
     # Create temp file
     local temp_file=$(mktemp)
 
     # Check if NEXT link exists
-    if grep -q "^-\s*NEXT:" "$logseq_file"; then
+    if grep -q "^-\s*!\[NEXT\]" "$logseq_file"; then
         # Replace existing NEXT link
-        sed "s|^-\s*NEXT:.*|$next_link|" "$logseq_file" > "$temp_file"
+        sed "s|^-\s*!\[NEXT\].*|$next_link|" "$logseq_file" > "$temp_file"
         mv "$temp_file" "$logseq_file"
     else
         # Add NEXT link after PREV link if it exists, otherwise at the beginning
-        if grep -q "^-\s*PREV:" "$logseq_file"; then
-            awk -v next="$next_link" '/^-\s*PREV:/{print; print next; next}1' "$logseq_file" > "$temp_file"
+        if grep -q "^-\s*!\[PREV\]" "$logseq_file"; then
+            awk -v next="$next_link" '/^-\s*!\[PREV\]/{print; print next; next}1' "$logseq_file" > "$temp_file"
             mv "$temp_file" "$logseq_file"
         else
             echo "$next_link" > "$temp_file"
@@ -255,21 +255,21 @@ update_latex_link() {
         return
     fi
 
-    local latex_link="- LaTeX: [[file://$pdf_path]]"
+    local latex_link="- ![LaTeX]($pdf_path)"
 
     # Check if LaTeX link already exists
-    if grep -q "^-\s*LaTeX:" "$logseq_file"; then
+    if grep -q "^-\s*!\[LaTeX\]" "$logseq_file"; then
         # Link already exists, don't update
         return
     fi
 
     # Add LaTeX link after NEXT link if it exists, otherwise after PREV
     local temp_file=$(mktemp)
-    if grep -q "^-\s*NEXT:" "$logseq_file"; then
-        awk -v latex="$latex_link" '/^-\s*NEXT:/{print; print latex; next}1' "$logseq_file" > "$temp_file"
+    if grep -q "^-\s*!\[NEXT\]" "$logseq_file"; then
+        awk -v latex="$latex_link" '/^-\s*!\[NEXT\]/{print; print latex; next}1' "$logseq_file" > "$temp_file"
         mv "$temp_file" "$logseq_file"
-    elif grep -q "^-\s*PREV:" "$logseq_file"; then
-        awk -v latex="$latex_link" '/^-\s*PREV:/{print; print latex; next}1' "$logseq_file" > "$temp_file"
+    elif grep -q "^-\s*!\[PREV\]" "$logseq_file"; then
+        awk -v latex="$latex_link" '/^-\s*!\[PREV\]/{print; print latex; next}1' "$logseq_file" > "$temp_file"
         mv "$temp_file" "$logseq_file"
     else
         echo "$latex_link" > "$temp_file"
@@ -347,8 +347,8 @@ sync_latex_to_logseq() {
             local prev_entry=$(find_prev_entry "$year" "$month" "$day")
             if [ -n "$prev_entry" ]; then
                 IFS=',' read -r prev_year prev_month prev_day <<< "$prev_entry"
-                local prev_display=$(format_display_date "$prev_year" "$prev_month" "$prev_day")
-                echo "- PREV: [[$prev_display]]" >> "$logseq_file"
+                local prev_date=$(printf "%04d-%02d-%02d" "$prev_year" "$prev_month" "$prev_day")
+                echo "- ![PREV]($prev_date)" >> "$logseq_file"
 
                 # Update previous entry's NEXT link
                 local prev_logseq="${LOGSEQ_DIR}/${prev_year}_${prev_month}_${prev_day}.md"
@@ -359,8 +359,8 @@ sync_latex_to_logseq() {
             local next_entry=$(find_next_entry "$year" "$month" "$day")
             if [ -n "$next_entry" ]; then
                 IFS=',' read -r next_year next_month next_day <<< "$next_entry"
-                local next_display=$(format_display_date "$next_year" "$next_month" "$next_day")
-                echo "- NEXT: [[$next_display]]" >> "$logseq_file"
+                local next_date=$(printf "%04d-%02d-%02d" "$next_year" "$next_month" "$next_day")
+                echo "- ![NEXT]($next_date)" >> "$logseq_file"
 
                 # Update next entry's PREV link
                 local next_logseq="${LOGSEQ_DIR}/${next_year}_${next_month}_${next_day}.md"
@@ -368,7 +368,7 @@ sync_latex_to_logseq() {
             fi
 
             # Add LaTeX link
-            echo "- LaTeX: [[file://$pdf_path]]" >> "$logseq_file"
+            echo "- ![LaTeX]($pdf_path)" >> "$logseq_file"
         else
             # Update existing file
             update_latex_link "$logseq_file" "$pdf_path"

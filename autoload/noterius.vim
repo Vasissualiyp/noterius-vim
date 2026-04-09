@@ -370,10 +370,6 @@ function! noterius#GetLogseqTodayPath()
     return noterius#GetLogseqPath(l:year, l:month, l:day)
 endfunction
 
-function! noterius#GetPdfPath(latex_path)
-    return substitute(a:latex_path, '\.tex$', '.pdf', '')
-endfunction
-
 " Date formatting function
 function! noterius#FormatLogseqDisplayDate(year, month, day)
     let l:month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -409,7 +405,7 @@ function! noterius#IsLogseqEntryEmpty(logseq_path)
         endif
 
         " Skip PREV and NEXT links
-        if l:trimmed =~# '^-\s*PREV:' || l:trimmed =~# '^-\s*NEXT:'
+        if l:trimmed =~# '^-\s*!\[PREV\]' || l:trimmed =~# '^-\s*!\[NEXT\]'
             continue
         endif
 
@@ -502,13 +498,13 @@ function! noterius#UpdateNextLink(year, month, day, next_year, next_month, next_
     endif
 
     let l:lines = readfile(l:path)
-    let l:next_display_date = noterius#FormatLogseqDisplayDate(a:next_year, a:next_month, a:next_day)
-    let l:next_link = '- NEXT: [[' . l:next_display_date . ']]'
+    let l:next_date = printf('%04d-%02d-%02d', a:next_year, a:next_month, a:next_day)
+    let l:next_link = '- ![NEXT](' . l:next_date . ')'
     let l:found_next = 0
 
     " Update or add NEXT link
     for l:i in range(len(l:lines))
-        if l:lines[l:i] =~# '^-\s*NEXT:'
+        if l:lines[l:i] =~# '^-\s*!\[NEXT\]'
             let l:lines[l:i] = l:next_link
             let l:found_next = 1
             break
@@ -519,7 +515,7 @@ function! noterius#UpdateNextLink(year, month, day, next_year, next_month, next_
     if !l:found_next
         let l:insert_index = 0
         for l:i in range(len(l:lines))
-            if l:lines[l:i] =~# '^-\s*PREV:'
+            if l:lines[l:i] =~# '^-\s*!\[PREV\]'
                 let l:insert_index = l:i + 1
                 break
             endif
@@ -537,13 +533,13 @@ function! noterius#UpdatePrevLink(year, month, day, prev_year, prev_month, prev_
     endif
 
     let l:lines = readfile(l:path)
-    let l:prev_display_date = noterius#FormatLogseqDisplayDate(a:prev_year, a:prev_month, a:prev_day)
-    let l:prev_link = '- PREV: [[' . l:prev_display_date . ']]'
+    let l:prev_date = printf('%04d-%02d-%02d', a:prev_year, a:prev_month, a:prev_day)
+    let l:prev_link = '- ![PREV](' . l:prev_date . ')'
     let l:found_prev = 0
 
     " Update or add PREV link
     for l:i in range(len(l:lines))
-        if l:lines[l:i] =~# '^-\s*PREV:'
+        if l:lines[l:i] =~# '^-\s*!\[PREV\]'
             let l:lines[l:i] = l:prev_link
             let l:found_prev = 1
             break
@@ -564,12 +560,12 @@ function! noterius#UpdateLogseqLatexLink(logseq_path, latex_url)
     endif
 
     let l:lines = readfile(a:logseq_path)
-    let l:latex_link = '- LaTeX: [[file://' . a:latex_url . ']]'
+    let l:latex_link = '- ![LaTeX](' . a:latex_url . ')'
     let l:has_latex_link = 0
 
     " Check if LaTeX link already exists
     for l:line in l:lines
-        if l:line =~# '^-\s*LaTeX:'
+        if l:line =~# '^-\s*!\[LaTeX\]'
             let l:has_latex_link = 1
             break
         endif
@@ -579,10 +575,10 @@ function! noterius#UpdateLogseqLatexLink(logseq_path, latex_url)
     if !l:has_latex_link
         let l:insert_index = 0
         for l:i in range(len(l:lines))
-            if l:lines[l:i] =~# '^-\s*NEXT:'
+            if l:lines[l:i] =~# '^-\s*!\[NEXT\]'
                 let l:insert_index = l:i + 1
                 break
-            elseif l:lines[l:i] =~# '^-\s*PREV:'
+            elseif l:lines[l:i] =~# '^-\s*!\[PREV\]'
                 let l:insert_index = l:i + 1
             endif
         endfor
@@ -611,8 +607,8 @@ function! noterius#CreateLogseqFile(year, month, day, latex_file)
     " Find previous entry
     let l:prev_entry = noterius#FindPreviousLogseqEntry(a:year, a:month, a:day)
     if !empty(l:prev_entry)
-        let l:prev_display = noterius#FormatLogseqDisplayDate(l:prev_entry.year, l:prev_entry.month, l:prev_entry.day)
-        call add(l:content, '- PREV: [[' . l:prev_display . ']]')
+        let l:prev_date = printf('%04d-%02d-%02d', l:prev_entry.year, l:prev_entry.month, l:prev_entry.day)
+        call add(l:content, '- ![PREV](' . l:prev_date . ')')
         " Update the previous entry's NEXT link to point to this entry
         call noterius#UpdateNextLink(l:prev_entry.year, l:prev_entry.month, l:prev_entry.day, a:year, a:month, a:day)
     endif
@@ -620,16 +616,16 @@ function! noterius#CreateLogseqFile(year, month, day, latex_file)
     " Find next entry
     let l:next_entry = noterius#FindNextLogseqEntry(a:year, a:month, a:day)
     if !empty(l:next_entry)
-        let l:next_display = noterius#FormatLogseqDisplayDate(l:next_entry.year, l:next_entry.month, l:next_entry.day)
-        call add(l:content, '- NEXT: [[' . l:next_display . ']]')
+        let l:next_date = printf('%04d-%02d-%02d', l:next_entry.year, l:next_entry.month, l:next_entry.day)
+        call add(l:content, '- ![NEXT](' . l:next_date . ')')
         " Update the next entry's PREV link to point to this entry
         call noterius#UpdatePrevLink(l:next_entry.year, l:next_entry.month, l:next_entry.day, a:year, a:month, a:day)
     endif
 
     " Add LaTeX link if latex_file is provided
     if a:latex_file != ''
-        let l:pdf_path = noterius#GetPdfPath(expand(a:latex_file))
-        call add(l:content, '- LaTeX: [[file://' . l:pdf_path . ']]')
+        let l:pdf_path = substitute(expand(a:latex_file), '\.tex$', '.pdf', '')
+        call add(l:content, '- ![LaTeX](' . l:pdf_path . ')')
     endif
 
     " Write the file
@@ -648,7 +644,7 @@ function! noterius#CreateOrUpdateLogseqEntry(year, month, day, latex_file)
 
     if filereadable(l:logseq_path)
         " File exists, update LaTeX link and handwritten notes
-        let l:pdf_path = noterius#GetPdfPath(expand(a:latex_file))
+        let l:pdf_path = substitute(expand(a:latex_file), '\.tex$', '.pdf', '')
         call noterius#UpdateLogseqLatexLink(l:logseq_path, l:pdf_path)
         call noterius#LinkHandwrittenNotes(l:logseq_path, a:year, a:month, a:day)
     else
