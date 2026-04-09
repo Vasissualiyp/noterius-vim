@@ -560,7 +560,9 @@ function! noterius#UpdateLogseqLatexLink(logseq_path, latex_url)
     endif
 
     let l:lines = readfile(a:logseq_path)
-    let l:latex_link = '- LaTeX: [[' . a:latex_url . ']]'
+    let l:latex_link = '- ![LaTeX](' . a:latex_url . ')'
+
+
     let l:has_latex_link = 0
 
     " Check if LaTeX link already exists
@@ -625,7 +627,7 @@ function! noterius#CreateLogseqFile(year, month, day, latex_file)
     " Add LaTeX link if latex_file is provided
     if a:latex_file != ''
         let l:pdf_path = substitute(expand(a:latex_file), '\.tex$', '.pdf', '')
-        call add(l:content, '- LaTeX: [[' . l:pdf_path . ']]')
+        call add(l:content, '- ![LaTeX](' . l:pdf_path . ')')
     endif
 
     " Write the file

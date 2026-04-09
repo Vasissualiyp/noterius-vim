@@ -255,7 +255,7 @@ update_latex_link() {
         return
     fi
 
-    local latex_link="- LaTeX: [[$pdf_path]]"
+    local latex_link="- ![LaTeX]($pdf_path)"
 
     # Check if LaTeX link already exists
     if grep -q "^-\s*LaTeX:" "$logseq_file"; then
@@ -368,7 +368,7 @@ sync_latex_to_logseq() {
             fi
 
             # Add LaTeX link
-            echo "- LaTeX: [[$pdf_path]]" >> "$logseq_file"
+            echo "- ![LaTeX]($pdf_path)" >> "$logseq_file"
         else
             # Update existing file
             update_latex_link "$logseq_file" "$pdf_path"
