@@ -258,7 +258,7 @@ update_latex_link() {
     local latex_link="- ![LaTeX]($pdf_path)"
 
     # Check if LaTeX link already exists
-    if grep -q "^-\s*LaTeX:" "$logseq_file"; then
+    if grep -q "^-\s*![LaTeX\]" "$logseq_file"; then
         # Link already exists, don't update
         return
     fi

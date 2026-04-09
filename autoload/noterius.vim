@@ -567,7 +567,7 @@ function! noterius#UpdateLogseqLatexLink(logseq_path, latex_url)
 
     " Check if LaTeX link already exists
     for l:line in l:lines
-        if l:line =~# '^-\s*LaTeX:'
+        if l:line =~# '^-\s*![LaTeX\]'
             let l:has_latex_link = 1
             break
         endif
