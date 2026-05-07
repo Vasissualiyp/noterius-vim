@@ -22,6 +22,16 @@ NOTES_DIR=$(eval echo "$NOTES_DIR")
 LOGSEQ_DIR=$(eval echo "$LOGSEQ_DIR")
 ASSETS_DIR=$(eval echo "$ASSETS_DIR")
 
+# Derive the assets base dir (parent of the svg dir) for note_processor.py
+ASSETS_BASE_DIR=$(dirname "$ASSETS_DIR")
+
+# Run note_processor.py to convert any pending .svgz files to .svg before sync
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if command -v python3 &>/dev/null && [ -f "$SCRIPT_DIR/note_processor.py" ]; then
+    echo "Processing handwritten notes (.svgz -> .svg)..."
+    python3 "$SCRIPT_DIR/note_processor.py" "$ASSETS_BASE_DIR"
+fi
+
 # Verify directories exist
 if [ ! -d "$NOTES_DIR" ]; then
     echo "Error: Notes directory does not exist: $NOTES_DIR"
