@@ -151,7 +151,7 @@ def process():
         filename = item.name
         match = SCHEMA_RE.match(filename)
         if not match:
-            date_str = datetime.now().strftime("%Y-%m-%d")
+            date_str = datetime.fromtimestamp(item.stat().st_mtime).strftime("%Y-%m-%d")
             num = get_next_num(date_str)
             new_name = f"{date_str}_{num}.svgz"
             os.rename(item, SVGZ_DIR / new_name)
